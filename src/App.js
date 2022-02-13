@@ -1,41 +1,49 @@
 import React from 'react';
 import {
   ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
   theme,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Logo } from './Logo';
+import AppContext from './utils/context';
+import Home from './pages/home';
+import Main from './pages/main';
+import axios from "axios";
 
-function App() {
-  return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
+// define context objects
+/**
+ * State objects
+ * user object
+ * authentication token
+ * theme 
+ */
+
+/**
+ * 
+ * @returns 
+ * <Box textAlign="center" fontSize="xl">
         <Grid minH="100vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
           </VStack>
         </Grid>
       </Box>
-    </ChakraProvider>
+ */
+function App() {
+
+  axios.create({
+    baseURL: "http://localhost:3000",
+    headers: {
+      "Content-type": "application/json"
+    }
+  });
+  
+  return (
+    <AppContext.Provider>
+      <ChakraProvider theme={theme}>
+            <Main/>
+      </ChakraProvider>
+  </AppContext.Provider>
   );
 }
 
