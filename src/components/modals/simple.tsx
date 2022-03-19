@@ -30,7 +30,7 @@ import {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme='blue' mr={3} onClick={()=>{
-                  appContext.modalstate.simplemodal = {isOpen:false,icon:null,title:"Success", message:"Signup Operation Successfull"};
+                appContext.modalstate.simplemodal = {isOpen:false,icon:null,title:"Success", message:"Signup Operation Successfull"};
               }}>
                 Close
               </Button>

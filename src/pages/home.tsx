@@ -21,6 +21,9 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  List,
+  ListItem,
+  StackDivider,
 } from '@chakra-ui/react';
 import {
   FiHome,
@@ -33,22 +36,33 @@ import {
   FiChevronDown,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
-import { ReactText } from 'react';
+import { ReactText, useContext } from 'react';
+import { Route, Routes, Link as ReachLink } from 'react-router-dom';
+import Orders from '../components/sections/orders.section';
+import ProductAddToCart from '../components/products/product.card';
+import Scrollbar from "react-scrollbars-custom";
+import NewOrder from '../components/modals/order.new';
+
+import AppContext from '../utils/context';
 
 const LinkItems = [
-  { name: 'Dashboard', icon: FiHome },
-  { name: 'Negotiations', icon: FiTrendingUp },
-  { name: 'Order History', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Dashboard', icon: FiHome, path: "#",auth:['Client','Admin','God'] },
+  { name: 'Ongoing Orders', icon: FiTrendingUp, path: "/orders", auth:['Client','Admin','God']},
+  { name: 'Completed Orders', icon: FiStar, path: "/invoices",auth:['Client','Admin','God'] },
+  // { name: 'Submitted Orders', icon: FiStar, path: "/submitted",auth:['Client' ,'Admin','God'] },
+  { name: 'Clients', icon: FiStar, path: "/clients", auth:['Client','Admin','God'] },
+  // { name: 'Client Orders', icon: FiStar, path: "#", auth:['Admin','God'] },
+  { name: 'Settings', icon: FiSettings, path: "#", auth:['Client','Admin','God'] },
 ];
 
-export default function Home({children}) {
+export default function Home({ children }: { children: JSX.Element }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
-        display={{ base: 'none', md: 'block' }}
+      // display={{ base: 'none', md: 'block' }}
       />
       <Drawer
         autoFocus={false}
@@ -73,7 +87,8 @@ export default function Home({children}) {
 
 
 
-const SidebarContent = ({ onClose, ...rest }) => {
+const SidebarContent = ({ onClose, ...rest }: { onClose: any }) => {
+  const appContext = useContext(AppContext);
   return (
     <Box
       transition="3s ease"
@@ -90,19 +105,22 @@ const SidebarContent = ({ onClose, ...rest }) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          {link.name}
-        </NavItem>
-      ))}
+      {LinkItems.map(({ name, icon, path, auth }: { name: any, icon: any, path: String, auth:Array<String> }) => {
+        // checking if the current user has rights to see this ui element
+        console.log(appContext.user.type)
+        if(!auth.includes(appContext.user.type))return;
+        return (<NavItem key={name} icon={icon} path={path}>
+          {name}
+        </NavItem>);
+      })}
     </Box>
   );
 };
 
 
-const NavItem = ({ icon, children, ...rest }) => {
+const NavItem = ({ icon, children, path, ...rest }: { icon: any, children: any, path: any }) => {
   return (
-    <Link href="#" style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link to={path} as={ReachLink} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align="center"
         p="4"
@@ -131,7 +149,7 @@ const NavItem = ({ icon, children, ...rest }) => {
   );
 };
 
-const MobileNav = ({ onOpen, ...rest }) => {
+const MobileNav = ({ onOpen, ...rest }: { onOpen: any }) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}

@@ -10,6 +10,10 @@ interface AuthContextType {
     setModalState:any;
     signinpageActive:Boolean; // 
     setSigninPageActive:any; // 
+    token:any;
+    setToken:any;
+    refreshStateTracker:any; 
+    setRefreshStateTracker:any;
   }
 const AppContext = React.createContext<AuthContextType>(null!);
 export default AppContext;

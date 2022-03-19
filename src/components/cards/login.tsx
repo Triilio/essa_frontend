@@ -14,14 +14,28 @@ import {
     Text,
     useColorModeValue,
   } from '@chakra-ui/react';
-  import { useState, useContext } from "react";
+  import { useState, useContext, useEffect } from "react";
   import AppContext from "../../utils/context";
+  import axios from "axios";
   
   const SimpleCard = () =>  {
     const [email, setEmail] = useState("");  
     const [password, setPassword] = useState(""); 
     const appContext = useContext(AppContext);
     const navigate = useNavigate();
+
+  useEffect(() => {
+    var state = window.localStorage.getItem('user');
+    if(state != null){
+      //  make state
+      var user = JSON.parse(state);
+      appContext.setUser(user.user);
+      axios.defaults.headers.post["x-auth-token"] = user.token; 
+      axios.defaults.headers.get["x-auth-token"] = user.token; 
+      console.log(user)
+      console.log(user.token)
+    }
+  });
     return ( 
       <Flex
         minH={'100vh'}
@@ -71,7 +85,10 @@ import {
                 
                     if(res !== null){
                       console.log(res);
-                      appContext.setUser(true);
+                      axios.defaults.headers.common = {
+                        "X-auth-token": res.token,
+                      };
+                      appContext.setUser(res.user);
                       // navigate('/');
                     }
                   }}

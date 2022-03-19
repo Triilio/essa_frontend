@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useContext} from 'react';
 import {
   ChakraProvider,
   theme,
@@ -9,7 +9,7 @@ import AppContext from './utils/context';
 import Home from './pages/home';
 import Main from './pages/main';
 import axios from "axios";
-
+import { AuthApiProvider } from './providers/api.provider';
 // define context objects
 /**
  * State objects
@@ -30,14 +30,7 @@ import axios from "axios";
       </Box>
  */
 function App() {
-
-  axios.create({
-    baseURL: "http://localhost:3000",
-    headers: {
-      "Content-type": "application/json"
-    }
-  });
-  
+  const appContext = useContext(AppContext);
   return (
     <AppContext.Provider>
       <ChakraProvider theme={theme}>
