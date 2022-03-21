@@ -23,7 +23,7 @@ function RemoveItem({ id, name, price, callback }: { id: String, name: String, p
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Update Item</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton />  
           <ModalBody>
             Are you sure you want to remove this item: ({name} at {price} per unit)
           </ModalBody>

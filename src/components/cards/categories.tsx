@@ -23,8 +23,9 @@ import RemoveItem from '../modals/item.delete';
 import EditItem from '../modals/item.edit';
 import NewPayment from '../modals/payment.new';
 import RemovePayment from '../modals/payment.delete';
+import NewCategory from '../modals/category.new';
 
-export default function Payments({items, tooltip, callback }: { items : any, tooltip:string, callback: () => void }) {
+export default function Category({items, callback }: { items : any, callback: () => void }) {
   const hiddenFileInput = useRef(null);
   var apiProvider = new AuthApiProvider()
   const appContext = useState(AppContext);
@@ -39,24 +40,13 @@ export default function Payments({items, tooltip, callback }: { items : any, too
   const columns = [
     // id, amount, name, items, status, number
     {
-      name: 'Date',
-      selector: (row: any) => row.date,
-      sortable: true,
-      format:(row:any, index:any)=>{
-        // var sdate = row.date.toString().split("-")
-        return(
-          <>{row.date}</>
-        )
-      }
-    },
-    {
-      name: 'Amount',
-      selector: (row: any) => row.amount,
+      name: 'Name',
+      selector: (row: any) => row.name,
       sortable: true,
     },
     {
-      name: 'Actions',
-      selector: (row: any) => row.id,
+      name: 'Action',
+      selector: (row: any) => row.description,
       format: (row: any, index: any) => {
         console.log("row => ",row)
         return (
@@ -78,17 +68,8 @@ export default function Payments({items, tooltip, callback }: { items : any, too
 
 
 
-  const uploadFile = () => {
-    apiProvider.uploadDoc({ url: '/orders/uploaddoc', formData: formData }).then((data) => {
-      callback(); // refresh parent
-    }).catch((error) => {
-      console.log(error);
-      alert("Error Occured");
-    })
-  }
-
   return (
-    <Tooltip label={tooltip}>
+    <Tooltip label={""}>
     <Box
       maxW={'100%'}
       w={'full'}
@@ -111,9 +92,9 @@ export default function Payments({items, tooltip, callback }: { items : any, too
           px={3}
           color={'green.500'}
           rounded={'full'}>
-          Payments Tracker
+          Product Categories
         </Text>
-        <NewPayment id={param.id+""} callback={function (): void {
+        <NewCategory id={param.id+""} callback={function (): void {
             callback()
           } }/>
       </Stack>
@@ -122,20 +103,18 @@ export default function Payments({items, tooltip, callback }: { items : any, too
       <DataTable
               title={
                 <>
-                  Completed payments
+                  Categories
                 </> 
               }
               columns={columns}
               data={items}
               contextMessage={{singular:"Payment",plural:"Payments",message:"No payments yet"}}
               selectableRows
-              // defaultSortAsc={false}
+              defaultSortAsc={false}
               striped={true}
               pagination
               pointerOnHover
               onRowClicked={(row, event) => {
-                // alert("clicked"+row._id)
-                // nav(row._id);
               }}
             />
       </Box>

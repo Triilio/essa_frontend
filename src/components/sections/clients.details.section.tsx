@@ -312,8 +312,8 @@ const ClientDetails = () => {
         </SimpleGrid>
       </Container>
       <NewOrder  callback={function (): void {
-          setReload(!reload)
-      } }/>
+        setReload(!reload);
+      } } categories={undefined}/>
       <Table variant='striped' colorScheme='teal'>
         <TableCaption>{"History".toUpperCase()}</TableCaption>
         <Thead>

@@ -281,6 +281,35 @@ class AuthApiProvider {
     });
   }
 
+
+
+  addCategory = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      console.log("data",data)
+      axios.post(`${this.baseurl}/orders/category/new`, data).then((data) => {
+        console.log(data.data)
+        resolve(data.data);
+      }).catch((error) => {
+        reject(error);
+      }).finally(() => {
+
+      })
+    });
+  }
+
+
+  removeCategory = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios.post(`${this.baseurl}/orders/category/remove`, data).then((data) => {
+        resolve(data.data);
+      }).catch((error) => {
+        reject(error);
+      }).finally(() => {
+
+      })
+    });
+  }
+
   
 }
 export { AuthApiProvider };

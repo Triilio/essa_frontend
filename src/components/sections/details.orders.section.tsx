@@ -22,6 +22,15 @@ import {
   HStack,
   Tooltip,
   Center,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Portal,
 } from '@chakra-ui/react';
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { MdLocalShipping } from 'react-icons/md';
@@ -43,6 +52,7 @@ import GenerateDeliveryNote from '../modals/generate.deliverynote';
 import GenerateCompletionCertification from '../modals/generate.completioncert';
 import { Spinner } from '@chakra-ui/react';
 import Expenditure from '../cards/expenditure';
+import Category from '../cards/categories';
 
 export default function NegotiationDetails() {
   const apiContext = useContext(AppContext);
@@ -65,6 +75,8 @@ export default function NegotiationDetails() {
   const [boq, setBOQ] = useState(null);
   const [completioncert, setCompletioncert] = useState(null);
   const [surveyreport, setSurveyreport] = useState(null);
+
+  const [category, setCategory] = useState<any>([]);
 
   // docs / product docs
   const [invoice, setInvoice] = useState(null);
@@ -91,7 +103,7 @@ export default function NegotiationDetails() {
         setBacker(res.data.backer);
 
         setPayments(res.data.payments);
-
+        setCategory(res.data.categories);
         // initing docs
         setRequestDoc(res.data.docs.requestdoc);
         setBOQ(res.data.docs.boq);
@@ -158,13 +170,13 @@ export default function NegotiationDetails() {
         return (
           <>
             <EditItem
-              id={row.id}
+              id={row._id}
               callback={function (): void {
                 throw new Error('Function not implemented.');
               }}
             />
             <RemoveItem
-              id={row.id}
+              id={row._id}
               name={row.name}
               price={row.price.price}
               callback={function (): void {
@@ -183,7 +195,7 @@ export default function NegotiationDetails() {
         <Body />
       ) : (
         <Center alignContent={'center'} alignSelf={'center'}>
-          <Spinner size={'lg'}  />
+          <Spinner size={'lg'} />
         </Center>
       )}
     </Container>
@@ -250,6 +262,7 @@ export default function NegotiationDetails() {
                 <>
                   Order Items
                   <NewItem
+                    categories={category}
                     id={param.id + ''}
                     callback={function (): void {
                       setRefreshStateTracker(!refreshStateTracker);
@@ -259,8 +272,7 @@ export default function NegotiationDetails() {
                     id={param.id + ''}
                     callback={function (): void {
                       setRefreshStateTracker(!refreshStateTracker);
-                    }}
-                  />
+                    } } name={''} price={0} marketprice={0} units={items} supplier={''} description={''}                  />
                 </>
               }
               columns={columns}
@@ -389,6 +401,12 @@ export default function NegotiationDetails() {
                 </Box>
               </Box>
             </Tooltip>
+
+            <Category
+              items={category}
+              callback={() => setRefreshStateTracker(!refreshStateTracker)}
+            />
+
             <Payments
               items={payments}
               tooltip={'Incoming Payments'}

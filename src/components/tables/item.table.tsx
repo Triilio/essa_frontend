@@ -17,7 +17,7 @@ import RemoveItem from "../modals/item.delete";
 import NewItem from "../modals/item.new";
 import { useParams } from "react-router-dom";
 
-function ItemList({ items, status, callback }: { items: any, status: any, callback: () => void }) {
+function ItemList({ items, categories, status, callback }: { categories:any , items: any, status: any, callback: () => void }) {
     const [refreshTracker, setRefreshTracker] = useState(false);
     const param = useParams();
     useEffect(() => {
@@ -27,7 +27,7 @@ function ItemList({ items, status, callback }: { items: any, status: any, callba
     return (
         <ChakraProvider>
             <Box>
-                <Heading>ORDER ITEMS {Number.parseInt(status) == 0 ? <NewItem id={param.id + ""} callback={function (): void { setRefreshTracker(!refreshTracker) }} /> : <></>} </Heading>
+                <Heading>ORDER ITEMS {Number.parseInt(status) == 0 ? <NewItem categories={categories} id={param.id + ""} callback={function (): void { setRefreshTracker(!refreshTracker) }} /> : <></>} </Heading>
                 <Box overflowY="auto" maxHeight="500px">
                     <Table variant="striped" colorScheme="tomato">
                         <Thead position="sticky" top={0} bgColor="grey">
