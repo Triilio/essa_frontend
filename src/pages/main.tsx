@@ -22,6 +22,7 @@ import OrderDetails from "../components/sections/details.orders.section";
 import Invoices from "../components/sections/invoices.section";
 import Client from "../components/sections/clients.section";
 import ClientDetails from "../components/sections/clients.details.section";
+import Settings from "../components/sections/clients.settings.section";
 
 
 
@@ -41,6 +42,7 @@ const Main = () => {
           <Route path="/clients" element={<Base><Client /></Base>} />
             <Route path="/clients/:id" element={<Base><ClientDetails/></Base>} />
           <Route path="/submitted" element={<Base><Client /></Base>} />
+          <Route path="/settings" element={<Base><Settings /></Base>} />
         </Routes>
       </Router>
       <SimpleModal />

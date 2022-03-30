@@ -64,12 +64,10 @@ function Complete({
         anotherTempObject[element.category][0] = element;
       }
     });
-
     var tempList = [];
-
     for (var key in anotherTempObject) {
       if (anotherTempObject.hasOwnProperty(key)) {
-        //to be safe
+        // just so i can sleep at night. 
          tempList.push(<Category name={key} items={anotherTempObject[key]} />);
       }
     }

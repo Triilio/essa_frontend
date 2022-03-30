@@ -213,6 +213,19 @@ class AuthApiProvider {
     });
   }
 
+  getMe = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios.get(`${this.baseurl}/users/me`).then((data) => {
+        console.log(data.data.data)
+        resolve(data.data);
+      }).catch((error) => {
+        reject(error);
+      }).finally(() => {
+
+      })
+    });
+  }
+
   updateStatus = async (data: any) => {
     return new Promise((resolve, reject) => {
       axios.post(`${this.baseurl}/orders/updatestatus`, data).then((data) => {

@@ -52,7 +52,7 @@ const LinkItems = [
   // { name: 'Submitted Orders', icon: FiStar, path: "/submitted",auth:['Client' ,'Admin','God'] },
   { name: 'Clients', icon: FiStar, path: "/clients", auth:['Client','Admin','God'] },
   // { name: 'Client Orders', icon: FiStar, path: "#", auth:['Admin','God'] },
-  { name: 'Settings', icon: FiSettings, path: "#", auth:['Client','Admin','God'] },
+  { name: 'Settings', icon: FiSettings, path: "/settings", auth:['Client','Admin','God'] },
 ];
 
 export default function Home({ children }: { children: JSX.Element }) {
