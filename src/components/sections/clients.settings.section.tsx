@@ -87,6 +87,10 @@ const ClientDetails = () => {
   const [active, setActive] = useState('');
   const [enable, setEnable] = useState(true);
 
+  const [prevpass, setPrevpass] = useState<String>();
+  const [newpass, setNewpass] = useState<String>();
+  const [confirmnewpass, setConfirmNewpass] = useState<String>();
+
   const appContext = useContext(AppContext);
   const param = useParams();
 
@@ -320,23 +324,19 @@ const ClientDetails = () => {
             p={8}
           >
             <Stack spacing={4}>
-              <FormControl id="email">
-                <FormLabel>Email address</FormLabel>
-                <Input type="email" />
+              <FormControl id="password">
+                <FormLabel>Previous Password</FormLabel>
+                <Input type="password" onChange={(e) => setPrevpass(e.target.value)}/>
               </FormControl>
               <FormControl id="password">
-                <FormLabel>Password</FormLabel>
-                <Input type="password" />
+                <FormLabel>New Password</FormLabel>
+                <Input type="password" onChange={(e) => setNewpass(e.target.value)} />
+              </FormControl>
+              <FormControl id="password">
+                <FormLabel>Confirm New Password</FormLabel>
+                <Input type="password" onChange={(e) => setConfirmNewpass(e.target.value)} />
               </FormControl>
               <Stack spacing={10}>
-                <Stack
-                  direction={{ base: 'column', sm: 'row' }}
-                  align={'start'}
-                  justify={'space-between'}
-                >
-                  <Checkbox>Remember me</Checkbox>
-                  <Link color={'blue.400'} to={'#'}>Forgot password?</Link>
-                </Stack>
                 <Button
                   bg={'blue.400'}
                   color={'white'}
@@ -344,7 +344,7 @@ const ClientDetails = () => {
                     bg: 'blue.500',
                   }}
                 >
-                  Sign in
+                  Update
                 </Button>
               </Stack>
             </Stack>

@@ -38,15 +38,11 @@ import {
 import { IconType } from 'react-icons';
 import { ReactText, useContext } from 'react';
 import { Route, Routes, Link as ReachLink } from 'react-router-dom';
-import Orders from '../components/sections/orders.section';
-import ProductAddToCart from '../components/products/product.card';
-import Scrollbar from "react-scrollbars-custom";
-import NewOrder from '../components/modals/order.new';
 
 import AppContext from '../utils/context';
 
 const LinkItems = [
-  { name: 'Dashboard', icon: FiHome, path: "#",auth:['Client','Admin','God'] },
+  { name: 'Dashboard', icon: FiHome, path: "/dashboard",auth:['Client','Admin','God'] },
   { name: 'Ongoing Orders', icon: FiTrendingUp, path: "/orders", auth:['Client','Admin','God']},
   { name: 'Completed Orders', icon: FiStar, path: "/invoices",auth:['Client','Admin','God'] },
   // { name: 'Submitted Orders', icon: FiStar, path: "/submitted",auth:['Client' ,'Admin','God'] },

@@ -50,6 +50,7 @@ import GenerateRequestDoc from '../modals/generate.requestdoc';
 import GenerateSurveyReport from '../modals/generate.surveyreport';
 import GenerateDeliveryNote from '../modals/generate.deliverynote';
 import GenerateCompletionCertification from '../modals/generate.completioncert';
+import Detail from './../cards/detail.add';
 import { Spinner } from '@chakra-ui/react';
 import Expenditure from '../cards/expenditure';
 import Category from '../cards/categories';
@@ -397,6 +398,62 @@ export default function NegotiationDetails() {
                     ) : (
                       <></>
                     )}
+                  </HStack>
+                </Box>
+              </Box>
+            </Tooltip>
+
+            <Tooltip label={'Documents'}>
+              <Box
+                maxW={'100%'}
+                w={'full'}
+                bg={useColorModeValue('white', 'gray.800')}
+                boxShadow={'2xl'}
+                rounded={'md'}
+                py={3}
+                overflow={'hidden'}
+              >
+                <Stack
+                  textAlign={'center'}
+                  p={3}
+                  color={useColorModeValue('gray.800', 'white')}
+                  align={'flex-start'}
+                >
+                  <Text
+                    fontSize={'md'}
+                    fontWeight={500}
+                    bg={useColorModeValue('orange.50', 'orange.900')}
+                    p={2}
+                    px={3}
+                    color={'orange.500'}
+                    rounded={'full'}
+                  >
+                    Project Details
+                  </Text>
+                </Stack>
+
+                <Box
+                  bg={useColorModeValue('gray.50', 'gray.900')}
+                  px={6}
+                  py={1}
+                >
+                  <HStack m={2}>
+                    {/* Request Letter */}
+                    <Detail
+                      component={
+                        <GenerateRequestDoc
+                          id={`${param.id}`}
+                          initialvalue={requestdoc}
+                          callback={() =>
+                            setRefreshStateTracker(!refreshStateTracker)
+                          }
+                        />
+                      }
+                      label={'Contengency'}
+                      tooltip={'Generate a contengency'}
+                      isSet={requestdoc}
+                    />
+
                   </HStack>
                 </Box>
               </Box>

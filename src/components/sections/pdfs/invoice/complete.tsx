@@ -49,8 +49,6 @@ function Complete({
   const [list, setList] = useState<JSX.Element[]>();
 
   useEffect(()=>{
-    // generating category list
-    console.log("units", units);
     // getting the list of categories
     var tempObject: any[] = [];
     var anotherTempObject: any = {};
@@ -85,7 +83,7 @@ function Complete({
         address={address}
       />
       {list}
-      <Amount />
+      <Amount subtotal={100000} contingency={1222222} workmanship={12312312} total_due={12311232} />
       <Approved />
       <Footer />
     </>

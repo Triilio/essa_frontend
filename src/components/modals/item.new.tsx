@@ -42,7 +42,7 @@ function NewItem({
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
   const [marketprice, setMarketPrice] = useState(0);
-  const [units, setUnits] = useState('');
+  const [units, setUnits] = useState<Number>(0);
   const [supplier, setSupplier] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<String | null>(null);
@@ -84,7 +84,7 @@ function NewItem({
                 onChange={e => setCategory(e.target.value)}
               >
                 {categories.map((value: any) => {
-                  return <option value={value._id}>{value.name}</option>;
+                  return <option value={value.toString()}>{value.name}</option>;
                 })}
               </Select>
             </FormControl>
@@ -92,7 +92,7 @@ function NewItem({
               <FormLabel htmlFor="units">Quantity</FormLabel>
               <NumberInput
                 id="units"
-                onChange={e => setUnits(e)}
+                onChange={e => setUnits(Number.parseInt(e))}
                 placeholder="Number of units"
                 defaultValue={1}
                 min={1}
@@ -154,6 +154,7 @@ function NewItem({
                 }
                 apiProvider
                   .newItem({
+                    id:id,
                     name: name,
                     description: description,
                     price: { price: price, market_price: marketprice },

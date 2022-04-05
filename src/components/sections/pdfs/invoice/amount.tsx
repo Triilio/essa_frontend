@@ -1,15 +1,25 @@
 import React from 'react';
 
-export default () => {
+export default ({
+  subtotal,
+  contingency,
+  workmanship,
+  total_due,
+}: {
+  subtotal: any;
+  contingency: any;
+  workmanship: any;
+  total_due: any;
+}) => {
   return (
     <>
       <table
-        style={{ borderCollapse: 'collapse', marginLeft: '292.79pt' }}
+        style={{ borderCollapse: 'collapse', marginLeft: '50%' }}
         cellSpacing={0}
       >
         <tbody>
-          <tr style={{ height: '12pt' }}>
-            <td style={{ width: '100pt' }}>
+          <tr style={{ height: '12pt', paddingTop: '5pt' }}>
+            <td style={{}}>
               <p
                 className="s17"
                 style={{
@@ -19,19 +29,19 @@ export default () => {
                   textAlign: 'left',
                 }}
               >
-                SUB TOTAL:
+                <b>SUB TOTAL:</b>
               </p>
             </td>
-            <td style={{ width: '35pt' }}>
+            <td style={{}}>
               <p style={{ textIndent: '0pt', textAlign: 'left' }}>
                 <br />
               </p>
             </td>
-            <td style={{ width: '122pt' }}>
+            <td style={{}}>
               <p
                 className="s18"
                 style={{
-                  paddingLeft: '18pt',
+                  paddingLeft: '1pt',
                   textIndent: '0pt',
                   lineHeight: '10pt',
                   textAlign: 'left',
@@ -41,7 +51,8 @@ export default () => {
               </p>
             </td>
           </tr>
-          <tr style={{ height: '13pt' }}>
+
+          <tr style={{ height: '13pt', paddingTop: '5pt' }}>
             <td style={{ width: '100pt' }}>
               <p
                 className="s17"
@@ -52,15 +63,15 @@ export default () => {
                   textAlign: 'left',
                 }}
               >
-                CONTINGENCY [5%]:
+                <b>CONTINGENCY [5%]:</b>
               </p>
             </td>
-            <td style={{ width: '35pt' }}>
+            <td style={{ width: '10pt' }}>
               <p style={{ textIndent: '0pt', textAlign: 'left' }}>
                 <br />
               </p>
             </td>
-            <td style={{ width: '122pt' }}>
+            <td style={{ width: '200pt' }}>
               <p
                 className="s18"
                 style={{
@@ -74,12 +85,13 @@ export default () => {
               </p>
             </td>
           </tr>
-          <tr style={{ height: '24pt' }}>
+
+          <tr style={{ height: '24pt', paddingTop: '5pt' }}>
             <td
               style={{
                 width: '135pt',
                 borderBottomStyle: 'solid',
-                borderBottomWidth: '1pt',
+                borderBottomWidth: '5pt',
               }}
               colSpan={2}
             >
@@ -92,14 +104,14 @@ export default () => {
                   textAlign: 'left',
                 }}
               >
-                GENERAL WORKMANSHIP:
+                <b>WORKMANSHIP:</b>
               </p>
             </td>
             <td
               style={{
-                width: '122pt',
+                width: '10pt',
                 borderBottomStyle: 'solid',
-                borderBottomWidth: '1pt',
+                borderBottomWidth: '5pt',
               }}
             >
               <p
@@ -115,12 +127,13 @@ export default () => {
               </p>
             </td>
           </tr>
-          <tr style={{ height: '36pt' }}>
+
+          <tr style={{ height: '36pt', paddingTop: '5pt' }}>
             <td
               style={{
                 width: '100pt',
                 borderTopStyle: 'solid',
-                borderTopWidth: '1pt',
+                borderTopWidth: '5pt',
               }}
             >
               <p style={{ textIndent: '0pt', textAlign: 'left' }}>
@@ -134,14 +147,16 @@ export default () => {
                   textAlign: 'left',
                 }}
               >
-                Total Due
+                <p>
+                  <b>Total Due</b>
+                </p>
               </p>
             </td>
             <td
               style={{
                 width: '157pt',
                 borderTopStyle: 'solid',
-                borderTopWidth: '1pt',
+                borderTopWidth: '5pt',
               }}
               colSpan={2}
             >
@@ -158,8 +173,9 @@ export default () => {
               </p>
             </td>
           </tr>
-          <tr style={{ height: '18pt' }}>
-            <td style={{ width: '100pt' }}>
+
+          <tr style={{ height: '18pt', paddingTop: '5pt' }}>
+            <td style={{ width: '200pt' }}>
               <p
                 className="s20"
                 style={{
@@ -170,7 +186,7 @@ export default () => {
                   textAlign: 'left',
                 }}
               >
-                Amount In Words
+                <b>Amount In Words</b>
               </p>
             </td>
             <td style={{ width: '35pt' }}>
@@ -178,13 +194,14 @@ export default () => {
                 <br />
               </p>
             </td>
-            <td style={{ width: '122pt' }}>
+            <td style={{ width: '200pt' }}>
               <p style={{ textIndent: '0pt', textAlign: 'left' }}>
                 <br />
               </p>
             </td>
           </tr>
-          <tr style={{ height: '25pt' }}>
+
+          <tr style={{ height: '50pt', paddingTop: '5pt' }}>
             <td style={{ width: '257pt' }} colSpan={3}>
               <p
                 className="s21"

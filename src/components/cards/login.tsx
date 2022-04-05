@@ -25,6 +25,7 @@ import {
     const navigate = useNavigate();
 
   useEffect(() => {
+
     var state = window.localStorage.getItem('user');
     if(state != null){
       //  make state
@@ -35,7 +36,8 @@ import {
       console.log(user)
       console.log(user.token)
     }
-  });
+  },[]);
+
     return ( 
       <Flex
         minH={'100vh'}
