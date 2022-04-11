@@ -14,7 +14,7 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { EditIcon } from '@chakra-ui/icons';
 import { AuthApiProvider } from '../../../../providers/api.provider';
 import AppContext from '../../../../utils/context';
@@ -48,7 +48,7 @@ function Complete({
   const [customer, setCustomer] = useState<String>();
   const [list, setList] = useState<JSX.Element[]>();
 
-  useEffect(()=>{
+  useEffect(() => {
     // getting the list of categories
     var tempObject: any[] = [];
     var anotherTempObject: any = {};
@@ -65,16 +65,16 @@ function Complete({
     var tempList = [];
     for (var key in anotherTempObject) {
       if (anotherTempObject.hasOwnProperty(key)) {
-        // just so i can sleep at night. 
-         tempList.push(<Category name={key} items={anotherTempObject[key]} />);
+        // just so i can sleep at night.
+        tempList.push(<Category name={key} items={anotherTempObject[key]} />);
       }
     }
 
     setList(tempList);
-  }, []); 
+  }, []);
 
-  return (
-    <>
+  const UI = () => {
+    return <>
       <Header />
       <Billing
         customer={customer}
@@ -83,11 +83,17 @@ function Complete({
         address={address}
       />
       {list}
-      <Amount subtotal={100000} contingency={1222222} workmanship={12312312} total_due={12311232} />
+      <Amount
+        subtotal={100000}
+        contingency={1222222}
+        workmanship={12312312}
+        total_due={12311232}
+      />
       <Approved />
       <Footer />
     </>
-  );
+  };
+  return <UI />;
 }
 
 export default Complete;

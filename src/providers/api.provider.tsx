@@ -48,10 +48,10 @@ class AuthApiProvider {
   Signin = async (data: signUpData) => {
     let res = null;
     await axios
-    .post(`${this.baseurl}/auth/login`, data)
-    .then(data => {
-      window.localStorage.setItem('user', JSON.stringify(data.data));
-      // window.user = user;
+      .post(`${this.baseurl}/auth/login`, data)
+      .then(data => {
+        window.localStorage.setItem('user', JSON.stringify(data.data));
+        // window.user = user;
         res = data.data;
       })
       .catch(error => {
@@ -435,6 +435,66 @@ class AuthApiProvider {
     return new Promise((resolve, reject) => {
       axios
         .post(`${this.baseurl}/orders/category/remove`, data)
+        .then(data => {
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+  updateWorkmanship = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${this.baseurl}/orders/updateworkmanship`, data)
+        .then(data => {
+          console.log(data.data.data);
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {
+          console.log('updateworkmanshipdata', data);
+        });
+    });
+  };
+
+  updateConttingency = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${this.baseurl}/orders/updateconttingency`, data)
+        .then(data => {
+          console.log(data.data.data);
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+  // Stats
+
+  basicStats = async () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${this.baseurl}/stats/basic/`)
         .then(data => {
           resolve(data.data);
         })

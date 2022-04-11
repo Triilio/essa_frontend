@@ -46,27 +46,19 @@ const Negotiations = () => {
       sortable:true
     },
     {
-      name: 'Status',
+      name: 'Type',
       selector: (row:any) => row.status,
       sortable:true,
       format:(row:any,index:Number)=>{
         var tempstatus = "";
         var color = "";        
-          switch (row.status) {
-            case 0:
+          switch (row.type) {
+            case 'Service':
               tempstatus = "Not Completed";
               color = "blue";
               break;
-              case 1:
-                tempstatus = "Submitted";
-                color = "purple";
-                break;
-                case 3:
-                  tempstatus = "Returned";
-                  color = "red";
-                  break;
                 }
-                 return <Badge colorScheme={color}>{tempstatus}</Badge>
+                 return <Badge colorScheme={row.type === 'Service' ? 'red' : 'blue'}>{row.type}</Badge>
                 }
     },
   ];

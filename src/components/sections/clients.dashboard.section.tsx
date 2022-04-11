@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { AxisOptions, Chart } from 'react-charts';
+import ReactToPrint from 'react-to-print';
 import {
-  Chart,
+  // Chart,
   Axis,
   Tooltip as BizChartsTooltip,
   Line,
@@ -52,9 +54,11 @@ import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 
 import { ReactNode } from 'react';
-import { BsPerson } from 'react-icons/bs';
-import { FiServer } from 'react-icons/fi';
-import { GoLocation } from 'react-icons/go';
+import { 
+  FiActivity as ActiveOrderIcon, 
+  FaJediOrder as TotalOrderIcon, 
+  CgProfile as TotalClientIcon
+} from 'react-icons/all';
 
 const Dashboard = () => {
   const apiProvider = new AuthApiProvider();
@@ -72,8 +76,16 @@ const Dashboard = () => {
   const [newpass, setNewpass] = useState<String>();
   const [confirmnewpass, setConfirmNewpass] = useState<String>();
 
+  // stats
+  const [totalServices, setTotalServices] = useState<number>();
+  const [totalProduct, setTotalProducts] = useState<number>();
+  const [totalOrders, setTotalOrders] = useState<number>();
+  const [totalClients, setTotalClients] = useState<number>();
+  const [totalActive, setTotalActive] = useState<number>();
+
   const appContext = useContext(AppContext);
-  const param = useParams();
+  const param = useParams();let componentRef = useRef();
+
 
   const getUserInfo = () => {
     return apiProvider
@@ -92,14 +104,30 @@ const Dashboard = () => {
       });
   };
 
+  const getBasicStat = () => {
+    return apiProvider
+      .basicStats()
+      .then((res: any) => {
+        setTotalServices(res.services);
+        setTotalProducts(res.products);
+        setTotalOrders(res.orders);
+        setTotalClients(res.users);
+        setTotalActive(res.active);
+      })
+      .catch(error => {
+        alert('error');
+      });
+  };
+
   useEffect(() => {
     getUserInfo();
+    getBasicStat();
     return () => {};
   }, [reload]);
 
   interface StatsCardProps {
     title: string;
-    stat: string;
+    stat: any;
     icon: ReactNode;
   }
   function StatsCard(props: StatsCardProps) {
@@ -135,21 +163,63 @@ const Dashboard = () => {
   }
 
   const data = [
-    { month: "2015-01-01", acc: 84.0 },
-    { month: "2015-02-01", acc: 14.9 },
-    { month: "2015-03-01", acc: 17.0 },
-    { month: "2015-04-01", acc: 20.2 },
-    { month: "2015-05-01", acc: 55.6 },
-    { month: "2015-06-01", acc: 56.7 },
-    { month: "2015-07-01", acc: 30.6 },
-    { month: "2015-08-01", acc: 63.2 },
-    { month: "2015-09-01", acc: 24.6 },
-    { month: "2015-10-01", acc: 14.0 },
-    { month: "2015-11-01", acc: 9.4 },
-    { month: "2015-12-01", acc: 7.3 }
+    { month: '2015-01-01', acc: 84.0 },
+    { month: '2015-02-01', acc: 14.9 },
+    { month: '2015-03-01', acc: 17.0 },
+    { month: '2015-04-01', acc: 20.2 },
+    { month: '2015-05-01', acc: 55.6 },
+    { month: '2015-06-01', acc: 56.7 },
+    { month: '2015-07-01', acc: 30.6 },
+    { month: '2015-08-01', acc: 63.2 },
+    { month: '2015-09-01', acc: 24.6 },
+    { month: '2015-10-01', acc: 14.0 },
+    { month: '2015-11-01', acc: 9.4 },
+    { month: '2015-12-01', acc: 7.3 },
   ];
-  
 
+ 
+  type MyDatum = { date: Date, stars: number }
+  
+  function MyChart() {
+    const data = [
+      {
+        label: 'React Charts',
+        data: [
+          {
+            date: new Date(),
+            stars: 23467238,
+          },
+        ],
+      },
+    ]
+  
+    const primaryAxis = React.useMemo(
+      (): AxisOptions<MyDatum> => ({
+        getValue: (datum: { date: any; }) => datum.date,
+      }),
+      []
+    )
+  
+    const secondaryAxes = React.useMemo(
+      (): AxisOptions<MyDatum>[] => [
+        {
+          getValue: datum => datum.stars,
+        },
+      ],
+      []
+    )
+  
+    return (
+      <Chart
+        options={{
+          data,
+          primaryAxis,
+          secondaryAxes,
+        }}
+      />
+    )
+  }
+ 
   return (
     <>
       <Box
@@ -169,23 +239,23 @@ const Dashboard = () => {
           py={10}
           fontWeight={'bold'}
         >
-          Our company is expanding, you could be too.
+          {/* Our company is expanding, you could be too. */}
         </chakra.h1>
         <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
           <StatsCard
-            title={'Users'}
-            stat={'5,000'}
-            icon={<BsPerson size={'3em'} />}
+            title={'Total Clients'}
+            stat={totalClients}
+            icon={<TotalClientIcon size={'3em'} />}
           />
           <StatsCard
-            title={'Servers'}
-            stat={'1,000'}
-            icon={<FiServer size={'3em'} />}
+            title={'Total Orders'}
+            stat={totalOrders}
+            icon={<TotalOrderIcon size={'3em'} />}
           />
           <StatsCard
-            title={'Datacenters'}
-            stat={'7'}
-            icon={<GoLocation size={'3em'} />}
+            title={'Active Orders'}
+            stat={totalActive}
+            icon={<ActiveOrderIcon size={'3em'} />}
           />
         </SimpleGrid>
       </Box>
@@ -199,11 +269,6 @@ const Dashboard = () => {
           py={3}
           overflow={'hidden'}
         >
-          {/* <Chart height={400} data={data} forceFit>
-            <Axis name="temperature" label={{ formatter: val => `${val}°C` }} />
-            <Line position="month*temperature" size={2} color={'city'} />
-            <Point position="month*temperature" size={4} color={'city'} />
-          </Chart> */}
         </Box>
       </Tooltip>
     </>

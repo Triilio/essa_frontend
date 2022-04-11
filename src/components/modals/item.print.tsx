@@ -23,43 +23,72 @@ import {
   MenuDivider,
   Portal,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { CheckIcon, DownloadIcon } from '@chakra-ui/icons';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 import Complete from '../sections/pdfs/invoice/complete';
+import ReactToPrint, { useReactToPrint } from 'react-to-print';
 
-function PrintIvoice({ id, name, price, marketprice, units,  supplier,  description, callback }:
-   { id: String; 
-    name:string; 
-    price:number; 
-    marketprice:number; 
-    units:Object[];  
-    supplier:string;  
-    description:string;
-    callback: () => void }) {
-
-  const { isOpen: isOpenInvoice, onOpen: onOpenInvoice, onClose: onCloseInvoice } = useDisclosure();
-  const { isOpen: isOpenBoq, onOpen: onOpenBoq, onClose: onCloseBoq } = useDisclosure();
+function PrintIvoice({
+  id,
+  name,
+  price,
+  marketprice,
+  units,
+  supplier,
+  description,
+  callback,
+}: {
+  id: String;
+  name: string;
+  price: number;
+  marketprice: number;
+  units: Object[];
+  supplier: string;
+  description: string;
+  callback: () => void;
+}) {
+  const {
+    isOpen: isOpenInvoice,
+    onOpen: onOpenInvoice,
+    onClose: onCloseInvoice,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenBoq,
+    onOpen: onOpenBoq,
+    onClose: onCloseBoq,
+  } = useDisclosure();
 
   const btnRef = React.useRef();
   const [isloading, setIsloading] = useState(false);
 
-
   var apiProvider = new AuthApiProvider();
   const appContext = useState(AppContext);
 
+  var componentRef: any = useRef(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  class ComponentToPrint extends React.Component {
+    render() {
+      return (
+        <Complete
+          name={name}
+          price={price}
+          marketprice={marketprice}
+          units={units}
+          supplier={supplier}
+          description={description}
+        />
+      );
+    }
+  }
+
   return (
     <>
-      {/* <Button
-        m={1}
-        onClick={onOpen}
-        leftIcon={<DownloadIcon />}
-        colorScheme="teal"
-        size="md"
-      >
-        Print Invoice
-      </Button> */}
       <Menu>
         <MenuButton as={Button} colorScheme="pink">
           Print
@@ -80,38 +109,25 @@ function PrintIvoice({ id, name, price, marketprice, units,  supplier,  descript
           <ModalHeader>Invoice {id}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Complete name={name} price={price} marketprice={marketprice} units={units} supplier={supplier} description={description} />
+            <ComponentToPrint ref={el => (componentRef = el)} />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onCloseInvoice}>
               Cancel
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                // setIsloading(!isloading);
-                // apiProvider
-                //   .newItem({
-                //     id: id,
-                //     name: name,
-                //     description: description,
-                //     price: { price: price, market_price: marketprice },
-                //     units: units,
-                //     supplier: supplier,
-                //   })
-                //   .then(data => {
-                //     alert('item was succesfully added.');
-                //     callback();
-                //     onClose();
-                //   })
-                //   .catch(() => {
-                //     alert('An error Occured, please try again');
-                //     setIsloading(!isloading);
-                //   });
-              }}
-            >
-              Save
-            </Button>
+            <ReactToPrint
+              trigger={() => (
+                <Button
+                  m={1}
+                  // leftIcon={<DownloadIcon />}
+                  colorScheme="teal"
+                  size="md"
+                >
+                  Print Invoice
+                </Button>
+              )}
+              content={() => componentRef}
+            />
           </ModalFooter>
         </ModalContent>
       </Modal>

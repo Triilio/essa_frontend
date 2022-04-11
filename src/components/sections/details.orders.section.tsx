@@ -54,6 +54,9 @@ import Detail from './../cards/detail.add';
 import { Spinner } from '@chakra-ui/react';
 import Expenditure from '../cards/expenditure';
 import Category from '../cards/categories';
+import AddContengency from '../modals/add.contengency';
+import WorkmanShip from '../modals/add.workmanship';
+import { workerData } from 'worker_threads';
 
 export default function NegotiationDetails() {
   const apiContext = useContext(AppContext);
@@ -67,6 +70,9 @@ export default function NegotiationDetails() {
   const [thread, setThread] = useState([]);
   const [price, setPrice] = useState(0);
   const [status, setStatus] = useState(0);
+  const [contingency, setContingency] = useState(0);
+  const [workmanship, setWorkmanship] = useState(0);
+  
 
   const [backer, setBacker] = useState<any>(null);
   const [payments, setPayments] = useState([]);
@@ -105,6 +111,10 @@ export default function NegotiationDetails() {
 
         setPayments(res.data.payments);
         setCategory(res.data.categories);
+        setContingency(res.data.contingency | 0);
+        setWorkmanship(res.data.workmanship | 0);
+        
+
         // initing docs
         setRequestDoc(res.data.docs.requestdoc);
         setBOQ(res.data.docs.boq);
@@ -195,8 +205,8 @@ export default function NegotiationDetails() {
       {name ? (
         <Body />
       ) : (
-        <Center alignContent={'center'} alignSelf={'center'}>
-          <Spinner size={'lg'} />
+        <Center alignContent={'center'} padding={'30%'} alignSelf={'center'}>
+          <Spinner size={'xl'} style={{'justifySelf':"center",'justifyContent':'center'}} />
         </Center>
       )}
     </Container>
@@ -236,7 +246,7 @@ export default function NegotiationDetails() {
               color={'green.500'}
               rounded={'full'}
             >
-              D {price}.00
+              GMD {price}.00
               {/* D <span style={{ color: 'green' }}>{price}.00</span> */}
             </Heading>
             <Text
@@ -273,7 +283,14 @@ export default function NegotiationDetails() {
                     id={param.id + ''}
                     callback={function (): void {
                       setRefreshStateTracker(!refreshStateTracker);
-                    } } name={''} price={0} marketprice={0} units={items} supplier={''} description={''}                  />
+                    }}
+                    name={''}
+                    price={0}
+                    marketprice={0}
+                    units={items}
+                    supplier={''}
+                    description={''}
+                  />
                 </>
               }
               columns={columns}
@@ -441,19 +458,39 @@ export default function NegotiationDetails() {
                     {/* Request Letter */}
                     <Detail
                       component={
-                        <GenerateRequestDoc
+                        <AddContengency
                           id={`${param.id}`}
-                          initialvalue={requestdoc}
+                          initialvalue={contingency}
                           callback={() =>
                             setRefreshStateTracker(!refreshStateTracker)
                           }
+                          projecttotal={price}
                         />
                       }
                       label={'Contengency'}
-                      tooltip={'Generate a contengency'}
-                      isSet={requestdoc}
+                      tooltip={'Manage Contengency'}
+                      isSet={contingency}
+                      value={contingency}
+                      type="%"
                     />
 
+                    <Detail
+                      component={
+                        <WorkmanShip
+                          id={`${param.id}`}
+                          initialvalue={workmanship}
+                          callback={() =>
+                            setRefreshStateTracker(!refreshStateTracker)
+                          }
+                          projecttotal={price}
+                        />
+                      }
+                      label={'Workmanship'}
+                      tooltip={'Manage Workmanship'}
+                      isSet={workmanship}
+                      value={workmanship}
+                      type="GMD"
+                    />
                   </HStack>
                 </Box>
               </Box>

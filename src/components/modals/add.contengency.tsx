@@ -12,23 +12,41 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
   useDisclosure,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
+  StatGroup,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { BiAddToQueue, BiCloudUpload, BsCloud, MdDoneAll, MdDone } from 'react-icons/all';
+import {
+  BiAddToQueue,
+  BiCloudUpload,
+  BsCloud,
+  MdDoneAll,
+  MdDone,
+} from 'react-icons/all';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { nodeModuleNameResolver, parseCommandLine } from 'typescript';
 
 function AddContengency({
   id,
   initialvalue,
+  projecttotal,
   callback,
 }: {
   id: String;
-  initialvalue: string | null;
+  initialvalue: Number;
+  projecttotal: Number;
   callback: () => void;
 }) {
   const {
@@ -41,21 +59,29 @@ function AddContengency({
     onOpen: onOpenPreview,
     onClose: onClosePreview,
   } = useDisclosure();
+
   const btnRef = React.useRef();
+
   const [isloading, setIsloading] = useState(false);
-  const [value, setValue] = useState<any>('');
+  const [value, setValue] = useState<number>(initialvalue as number); //
 
-  const [title, setTitle] = useState<String>();
-  const [content, setContent] = useState<Array<String>>(['']);
-
-  var [keystrokecount, setKeystrokecount] = useState(0);
+  const [newTotal, setNewTotal] = useState<number>(projecttotal as number); // project total
+  const [newValue, setNewValue] = useState<number>(0); //
 
   var apiProvider = new AuthApiProvider();
   const appContext = useState(AppContext);
- 
+
   useEffect(() => {
-    setValue(initialvalue!);
-  },[initialvalue])
+    //  calculateting new total
+    var s =
+      (Number.parseFloat(projecttotal.toString()) / 100) *
+      Number.parseFloat(value.toString());
+
+    var newtotal1 = Number.parseFloat(projecttotal.toString()) + s;
+
+    setNewTotal(newtotal1);
+    setNewValue(s);
+  }, [value]);
 
   return (
     <>
@@ -73,45 +99,77 @@ function AddContengency({
           bg: 'green.500',
         }}
       >
-        Generate
+        Edit
       </Button>
 
-      <Modal size={'3xl'} isOpen={isOpenEdit} onClose={() => {postData(); callback(); onCloseEdit()}}>
+      <Modal
+        size={'lg'}
+        isOpen={isOpenEdit}
+        onClose={() => {
+          callback();
+          onCloseEdit();
+        }}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add a project CONTINGENCY percentage</ModalHeader>
-          <ModalHeader>{isloading ? <BiCloudUpload color='green'/> : <BsCloud color='green'/> }</ModalHeader>
+          <ModalHeader>
+            {/* {isloading ? (
+              <BiCloudUpload color="green" />
+            ) : (
+              <BsCloud color="green" />
+            )} */}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <StatGroup>
+              <Stat>
+                <StatLabel>Project Total</StatLabel>
+                <StatNumber>{newTotal}</StatNumber>
+                <StatHelpText>
+                  <StatArrow type="increase" />
+                  {value} %
+                </StatHelpText>
+              </Stat>
+
+              <Stat>
+                <StatLabel>Value</StatLabel>
+                <StatNumber>{newValue}</StatNumber>
+              </Stat>
+            </StatGroup>
             <FormControl isRequired>
-              <ReactQuill
-                theme="snow"
-                value={value}
-                onChange={e => {
-                  setValue(e);
-                  console.log(e)
-                  console.log(keystrokecount)
-                  if (keystrokecount > 10) {
-                    //  upload the new content
-                    setKeystrokecount(0);
-                    postData();
-                  } else {
-                    setKeystrokecount(keystrokecount + 1);
-                  }
-                }}
-              />
+              <NumberInput
+                allowMouseWheel
+                // step={0.5}
+                defaultValue={value}
+                // value={3}
+                // placeholder={value.toString()}
+                min={0}
+                max={50}
+                onChange={e => setValue(e as unknown as number)}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper
+                  // onClick={() => {
+                  //   setValue((value as number) - 0.5);
+                  // }}
+                  />
+                </NumberInputStepper>
+              </NumberInput>
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            {/* <Button colorScheme="blue" mr={3} onClick={onCloseEdit}>
+            <Button variant={'ghost'} mr={3} onClick={onCloseEdit}>
               Cancel
             </Button>
             <Button
-              variant="ghost"
+              colorScheme={'blue'}
               onClick={() => {
                 setIsloading(!isloading);
                 apiProvider
-                  .uploadDoc({})
+                  .updateConttingency({ id: id, update: value })
                   .then(data => {
                     alert('item was succesfully added.');
                     callback();
@@ -124,27 +182,12 @@ function AddContengency({
               }}
             >
               Done
-            </Button> */}
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </>
   );
-
-
-  function postData() {
-    setIsloading(true);
-    apiProvider
-      .uploadDoc({ name: 'requestdoc', id: id, content: value })
-      .then(data => {
-        setIsloading(false);
-      })
-      .catch(e => {
-        setIsloading(false);
-        // alert('An error Occured, p try again');
-        console.log(e);
-      });
-  }
 }
 
 export default AddContengency;

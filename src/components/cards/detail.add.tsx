@@ -28,13 +28,17 @@ import { useParams } from 'react-router-dom';
 export default function Detail({
   label,
   tooltip,
+  value,
   isSet,
   component,
+  type,
 }: {
   label: string;
   tooltip: string;
+  value: any;
   isSet: any;
   component: any;
+  type: any;
 }) {
 
   const param = useParams();
@@ -47,7 +51,7 @@ export default function Detail({
   return (
     <Tooltip label={tooltip}>
       <Box
-        maxW={'230px'}
+        maxW={'250px'}
         w={'full'}
         bg={useColorModeValue('white', 'gray.800')}
         boxShadow={'2xl'}
@@ -79,21 +83,13 @@ export default function Detail({
               textColor={isSet ? 'green' : 'red'}
             >
               {/* {isSet ? <CheckCircleIcon /> : <WarningIcon color={'tomato'} />} */}
-              5%
+              {type === "%" ? `${value}%` : `GMD ${value}`}
             </Text>
             <Text>{isSet ? 'Added' : 'Not set'}</Text>
           </Stack>
         </Stack>
 
         <Box bg={useColorModeValue('gray.50', 'gray.900')} px={6} py={1}>
-          <List spacing={3}>
-            <ListItem></ListItem>
-            {/* <ListItem>
-            <ListIcon as={InfoIcon} color="green.400" />
-            upload a request letter
-          </ListItem> */}
-          </List>
-
           <Stack direction={'row'} align={'center'} justify={'center'}>
             {component}
           </Stack>
