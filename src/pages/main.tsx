@@ -23,6 +23,7 @@ import Client from '../components/sections/clients.section';
 import ClientDetails from '../components/sections/clients.details.section';
 import Settings from '../components/sections/clients.settings.section';
 import Dashboard from '../components/sections/clients.dashboard.section';
+import Completed from '../components/sections/submitted.section';
 
 const Main = () => {
   return (
@@ -58,7 +59,7 @@ const Main = () => {
             path="/invoices"
             element={
               <Base>
-                <Invoices />
+                <Completed />
               </Base>
             }
           />

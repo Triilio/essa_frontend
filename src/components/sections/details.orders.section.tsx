@@ -72,7 +72,6 @@ export default function NegotiationDetails() {
   const [status, setStatus] = useState(0);
   const [contingency, setContingency] = useState(0);
   const [workmanship, setWorkmanship] = useState(0);
-  
 
   const [backer, setBacker] = useState<any>(null);
   const [payments, setPayments] = useState([]);
@@ -113,7 +112,6 @@ export default function NegotiationDetails() {
         setCategory(res.data.categories);
         setContingency(res.data.contingency | 0);
         setWorkmanship(res.data.workmanship | 0);
-        
 
         // initing docs
         setRequestDoc(res.data.docs.requestdoc);
@@ -130,6 +128,10 @@ export default function NegotiationDetails() {
               (Number.parseFloat(units) * Number.parseFloat(price.price) || 1);
           }
         );
+        //  add workmanship
+        p += res.data.workmanship;
+        // add contingency
+        p += (price / 100) * res.data.contingency;
         setPrice(p);
       })
       .catch(error => {
@@ -143,12 +145,15 @@ export default function NegotiationDetails() {
       alert('You cannot submit an empty order');
       return;
     }
-    var i = 0;
-    status === 1 ? (i = 0) : (i = 1);
+
+    if (!window.confirm('Are you Sure you want to mark this order as done?')) {
+      return;
+    }
     return apiProvider
-      .updateStatus({ id: param.id + '', update: i })
+      .updateStatus({ id: param.id + '', update: { status: 4 } })
       .then((res: any) => {
         console.log('status => ', status);
+        // Navigator
         setRefreshStateTracker(!refreshStateTracker);
       })
       .catch(error => {
@@ -206,7 +211,10 @@ export default function NegotiationDetails() {
         <Body />
       ) : (
         <Center alignContent={'center'} padding={'30%'} alignSelf={'center'}>
-          <Spinner size={'xl'} style={{'justifySelf':"center",'justifyContent':'center'}} />
+          <Spinner
+            size={'xl'}
+            style={{ justifySelf: 'center', justifyContent: 'center' }}
+          />
         </Center>
       )}
     </Container>
@@ -246,8 +254,7 @@ export default function NegotiationDetails() {
               color={'green.500'}
               rounded={'full'}
             >
-              GMD {price}.00
-              {/* D <span style={{ color: 'green' }}>{price}.00</span> */}
+              GMD {price}
             </Heading>
             <Text
               color={useColorModeValue('gray.500', 'gray.400')}
@@ -540,19 +547,6 @@ export default function NegotiationDetails() {
           >
             {'Complete Order'}
           </Button>
-
-          {status == 1 ? (
-            <Stack
-              direction="row"
-              alignItems="center"
-              justifyContent={'center'}
-            >
-              <MdLocalShipping />
-              <Text>1-2 business days response</Text>
-            </Stack>
-          ) : (
-            <></>
-          )}
         </Stack>
       </SimpleGrid>
     );

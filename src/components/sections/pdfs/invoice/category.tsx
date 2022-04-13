@@ -15,7 +15,6 @@ export default ({ name, items }: { name: string; items: any }) => {
   }, []);
 
   return (
-    <>
       <table
         style={{ borderCollapse: 'collapse', marginLeft: '10.25pt' }}
         cellSpacing={0}
@@ -398,7 +397,6 @@ export default ({ name, items }: { name: string; items: any }) => {
           </tr>
         </tbody>
       </table>
-    </>
   );
 };
 

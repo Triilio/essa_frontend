@@ -29,6 +29,7 @@ import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 import Complete from '../sections/pdfs/invoice/complete';
 import ReactToPrint, { useReactToPrint } from 'react-to-print';
+import Ui from '../sections/pdfs/invoice/ui';
 
 function PrintIvoice({
   id,
@@ -75,7 +76,7 @@ function PrintIvoice({
   class ComponentToPrint extends React.Component {
     render() {
       return (
-        <Complete
+        <Ui
           name={name}
           price={price}
           marketprice={marketprice}
@@ -109,25 +110,22 @@ function PrintIvoice({
           <ModalHeader>Invoice {id}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <ComponentToPrint ref={el => (componentRef = el)} />
+            <ComponentToPrint ref={componentRef} />
+            {/* <ComponentToPrint ref={el => (componentRef = el)} /> */}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onCloseInvoice}>
               Cancel
             </Button>
-            <ReactToPrint
-              trigger={() => (
-                <Button
-                  m={1}
-                  // leftIcon={<DownloadIcon />}
-                  colorScheme="teal"
-                  size="md"
-                >
-                  Print Invoice
-                </Button>
-              )}
-              content={() => componentRef}
-            />
+            <Button
+              m={1}
+              // leftIcon={<DownloadIcon />}
+              colorScheme="teal"
+              size="md"
+              onClick={handlePrint}
+            >
+              Print Invoice
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

@@ -2,7 +2,6 @@ import React from 'react';
 
 export default ({customer, date, invoiceid, address}:{customer:any, date:any, invoiceid:any, address:any, }) => {
   return (
-    <>
       <table
         style={{ borderCollapse: 'collapse', marginLeft: '5.4pt' }}
         cellSpacing={0}
@@ -95,6 +94,5 @@ export default ({customer, date, invoiceid, address}:{customer:any, date:any, in
           </tr>
         </tbody>
       </table>
-    </>
   );
 };

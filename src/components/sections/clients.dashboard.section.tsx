@@ -52,6 +52,7 @@ import { SmallCloseIcon } from '@chakra-ui/icons';
 import { useEffect, useContext } from 'react';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
+import { Doughnut } from 'react-chartjs-2';
 
 import { ReactNode } from 'react';
 import { 
@@ -269,6 +270,7 @@ const Dashboard = () => {
           py={3}
           overflow={'hidden'}
         >
+          {/* <Doughnut data={{}} /> */}
         </Box>
       </Tooltip>
     </>

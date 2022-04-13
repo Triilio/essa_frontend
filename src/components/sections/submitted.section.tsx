@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DataTable from 'react-data-table-component';
 import {
   Table,
   Thead,
@@ -20,66 +21,64 @@ import { useEffect, useContext } from 'react';
 import { AuthApiProvider } from '../../providers/api.provider';
 import NewOrder from '../modals/order.new';
 import AppContext from '../../utils/context';
+import { MdRowing } from 'react-icons/md';
 
-function TableRow({ id, amount, name, items, status, number }: { id: any, amount: any, name: any, items: any, status: any, number: any }) {
+
+const Completed = () => {
   var nav = useNavigate();
-  var tempstatus = "";
-  var color = "";
-  switch (status) {
-    case 0:
-      tempstatus = "Not Completed";
-      color = "blue";
-      break;
-    case 1:
-      tempstatus = "Submitted";
-      color = "purple";
-      break;
-    case 3:
-      tempstatus = "Returned";
-      color = "red";
-      break;
-    case 4:
-      tempstatus = "Completed";
-      color = "green";
-      break;
-
-    default:
-      break;
-  }
-  return (
-    <Tr id={number} style={{ "cursor": "pointer" }} onClick={((ss) => {
-      nav(id);
-    })}>
-      <Td >{number}</Td>
-      <Td >{name}</Td>
-      <Td isNumeric>{amount}</Td>
-      <Td>
-        <Badge colorScheme={color}>{tempstatus}</Badge>
-      </Td>
-    </Tr>
-  )
-}
-
-const Negotiations = () => {
   const apiProvider = new AuthApiProvider();
   const [list, setList] = useState([]);
-  const [option, setOption] = useState("active");
+  const [option, setOption] = useState("completed");
+  const [data, setData] = useState([]);
 
   const appContext = useContext(AppContext);
+  
+  const columns = [
+    // id, amount, name, items, status, number
+    {
+      name: '#',
+      selector: (row:any) => row.number,
+      sortable:true
+    },
+    {
+      name: 'Title',
+      selector: (row:any) => row.name,
+      sortable:true
+    },
+    {
+      name: 'Type',
+      selector: (row:any) => row.status,
+      sortable:true,
+      format:(row:any,index:Number)=>{
+        var tempstatus = "";
+        var color = "";        
+          switch (row.type) {
+            case 'Service':
+              tempstatus = "Not Completed";
+              color = "blue";
+              break;
+                }
+                 return <Badge colorScheme={row.type === 'Service' ? 'red' : 'blue'}>{row.type}</Badge>
+                }
+    },
+  ];
+
+
 
   const getData = () => {
     return apiProvider.getNegotiations(option).then((res: any) => {
       var ss: any = [];
-      res.forEach((element: any) => {
-        let amt = 0;
-        element.items.forEach((el: any) => {
-          amt += el.price;
-        });
-        ss.push(
-          <TableRow number={element.number} name={element.name} id={element._id} amount={amt} items={element.items} status={element.status} />
-        );
-      });
+      // res.forEach((element: any) => {
+      //   let amt = 0;
+      //   element.items.forEach((el: any) => {
+      //     amt += el.price;
+      //   });
+      //   ss.push(
+      //     <TableRow number={element.number} name={element.name} id={element._id} amount={amt} items={element.items} status={element.status} />
+      //   );
+      // });
       setList(ss);
+      setData(res);
     }).catch((error) => {
       console.log(error);
       alert("error");
@@ -96,44 +95,25 @@ const Negotiations = () => {
   return (
     <>
       <HStack w='100%' p={4} >
-        <Select w="20%" borderColor='teal' onChange={(e) => {
-          if (e.target.value === option || e.target.value  === "----") return;
-          setOption(e.target.value);
-        }}>
-          <option selected value='active'>Ongoing</option>
-          <option value='completed'>Completed</option>
-          <option value='cancelled'>Cancelled</option>
-        </Select>
-        {/* <NewOrder callback={() => {
-              getData();
-        }} /> */}
       </HStack>
-      <Table variant='striped' colorScheme='teal'>
-        <TableCaption>{option.toUpperCase()} NEGOTIATIONS</TableCaption>
-        <Thead>
-          <Tr>
-            <Th >#ID</Th>
-            <Th>Name</Th>
-            <Th isNumeric>(D) Amount</Th>
-            <Th>Status</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {list}
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th >#ID</Th>
-            <Th>Name</Th>
-            <Th isNumeric>Amount</Th>
-            <Th>Status</Th>
-          </Tr>
-        </Tfoot>
-      </Table>
+      <DataTable
+        title="Completed Orders"
+        columns={columns}
+        data={data}
+        selectableRows
+        // defaultSortAsc={false}
+        striped={true}
+        pagination
+        pointerOnHover
+        onRowClicked={(row, event) => {
+          // alert("clicked"+row._id)
+          nav(row._id);
+        }}
+      />
     </>
   )
 }
 
 
 
-export default Negotiations;
+export default Completed;

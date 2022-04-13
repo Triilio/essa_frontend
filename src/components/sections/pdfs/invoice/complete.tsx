@@ -74,15 +74,17 @@ function Complete({
   }, []);
 
   const UI = () => {
-    return <>
+    return (<>
       <Header />
       <Billing
         customer={customer}
         date={date}
         invoiceid={invoiceid}
         address={address}
-      />
-      {list}
+        />
+        {list?.map(e => {
+          return e;
+        })}
       <Amount
         subtotal={100000}
         contingency={1222222}
@@ -91,7 +93,7 @@ function Complete({
       />
       <Approved />
       <Footer />
-    </>
+    </>);
   };
   return <UI />;
 }
