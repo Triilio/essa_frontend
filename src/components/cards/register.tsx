@@ -27,7 +27,8 @@ import {
     const [email, setEmail] = useState(""); 
     const [businessname, setBusinessname] = useState(""); 
     const [password, setPassword] = useState(""); 
-    const [phone, setPhone] = useState(""); 
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
 
     const appContext = useContext(AppContext);
     return (
@@ -65,9 +66,13 @@ import {
                   </FormControl>
                 </Box>
               </HStack>
-              <FormControl id="email" isRequired>
+              <FormControl id="businessname" isRequired>
                 <FormLabel>Business Name</FormLabel>
                 <Input type="name" onChange={(e)=>setBusinessname(e.target.value)}/>
+              </FormControl>
+              <FormControl id="businessaddress" isRequired>
+                <FormLabel>Business Address</FormLabel>
+                <Input type="address" onChange={(e)=>setAddress(e.target.value)}/>
               </FormControl>
               <FormControl id="phone" isRequired>
                 <FormLabel>Phone Number</FormLabel>
@@ -104,6 +109,7 @@ import {
                     email:email,
                     businessname:businessname,
                     phone:phone,
+                    address:address,
                     password:password
                   });
                   if(res){

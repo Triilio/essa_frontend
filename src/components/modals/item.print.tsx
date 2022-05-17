@@ -33,21 +33,11 @@ import Ui from '../sections/pdfs/invoice/ui';
 
 function PrintIvoice({
   id,
-  name,
-  price,
-  marketprice,
   units,
-  supplier,
-  description,
   callback,
 }: {
   id: String;
-  name: string;
-  price: number;
-  marketprice: number;
   units: Object[];
-  supplier: string;
-  description: string;
   callback: () => void;
 }) {
   const {
@@ -61,12 +51,6 @@ function PrintIvoice({
     onClose: onCloseBoq,
   } = useDisclosure();
 
-  const btnRef = React.useRef();
-  const [isloading, setIsloading] = useState(false);
-
-  var apiProvider = new AuthApiProvider();
-  const appContext = useState(AppContext);
-
   var componentRef: any = useRef(null);
 
   const handlePrint = useReactToPrint({
@@ -76,14 +60,7 @@ function PrintIvoice({
   class ComponentToPrint extends React.Component {
     render() {
       return (
-        <Ui
-          name={name}
-          price={price}
-          marketprice={marketprice}
-          units={units}
-          supplier={supplier}
-          description={description}
-        />
+        <Ui/>
       );
     }
   }
@@ -104,7 +81,7 @@ function PrintIvoice({
         </Portal>
       </Menu>
 
-      <Modal isOpen={isOpenInvoice} onClose={onCloseInvoice} size={'3xl'}>
+      <Modal isOpen={isOpenInvoice} onClose={onCloseInvoice} size={'4xl'}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Invoice {id}</ModalHeader>

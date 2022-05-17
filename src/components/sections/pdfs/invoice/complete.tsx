@@ -66,7 +66,7 @@ function Complete({
     for (var key in anotherTempObject) {
       if (anotherTempObject.hasOwnProperty(key)) {
         // just so i can sleep at night.
-        tempList.push(<Category name={key} items={anotherTempObject[key]} />);
+        tempList.push(<Category  data={anotherTempObject[key]} />);
       }
     }
 

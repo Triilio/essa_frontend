@@ -1,65 +1,31 @@
 import React, { useState, useRef } from 'react';
-import { AxisOptions, Chart } from 'react-charts';
-import ReactToPrint from 'react-to-print';
+import { Line } from 'react-chartjs-2';
+
 import {
-  // Chart,
-  Axis,
-  Tooltip as BizChartsTooltip,
-  Line,
-  Point,
-} from 'bizcharts';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  Badge,
-  Text,
-  FormControl,
-  FormLabel,
-  Input,
-  Avatar,
-  AvatarBadge,
-  IconButton,
   Flex,
   useColorModeValue,
-  Heading,
-  Stack,
-  Center,
-  Button,
   Box,
   SimpleGrid,
-  ListItem,
-  List,
-  VStack,
-  StackDivider,
-  Container,
   Tooltip,
-  HStack,
-  Checkbox,
   StatLabel,
   StatNumber,
   Stat,
   chakra,
 } from '@chakra-ui/react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { SmallCloseIcon } from '@chakra-ui/icons';
+import { useParams } from 'react-router-dom';
 
 import { useEffect, useContext } from 'react';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
-import { Doughnut } from 'react-chartjs-2';
 
 import { ReactNode } from 'react';
-import { 
-  FiActivity as ActiveOrderIcon, 
-  FaJediOrder as TotalOrderIcon, 
-  CgProfile as TotalClientIcon
+import {
+  FiActivity as ActiveOrderIcon,
+  FaJediOrder as TotalOrderIcon,
+  CgProfile as TotalClientIcon,
 } from 'react-icons/all';
+
+import Chart  from './valueovertime.chart';
 
 const Dashboard = () => {
   const apiProvider = new AuthApiProvider();
@@ -84,9 +50,11 @@ const Dashboard = () => {
   const [totalClients, setTotalClients] = useState<number>();
   const [totalActive, setTotalActive] = useState<number>();
 
-  const appContext = useContext(AppContext);
-  const param = useParams();let componentRef = useRef();
+  // Charts
+  const [data, setData] = useState<Array<number>>([3, 4, 3, 2, 6, 7]);
 
+  const appContext = useContext(AppContext);
+  const param = useParams();
 
   const getUserInfo = () => {
     return apiProvider
@@ -163,64 +131,21 @@ const Dashboard = () => {
     );
   }
 
-  const data = [
-    { month: '2015-01-01', acc: 84.0 },
-    { month: '2015-02-01', acc: 14.9 },
-    { month: '2015-03-01', acc: 17.0 },
-    { month: '2015-04-01', acc: 20.2 },
-    { month: '2015-05-01', acc: 55.6 },
-    { month: '2015-06-01', acc: 56.7 },
-    { month: '2015-07-01', acc: 30.6 },
-    { month: '2015-08-01', acc: 63.2 },
-    { month: '2015-09-01', acc: 24.6 },
-    { month: '2015-10-01', acc: 14.0 },
-    { month: '2015-11-01', acc: 9.4 },
-    { month: '2015-12-01', acc: 7.3 },
-  ];
-
- 
-  type MyDatum = { date: Date, stars: number }
-  
-  function MyChart() {
-    const data = [
+  var dataset = {
+    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+    datasets: [
       {
-        label: 'React Charts',
-        data: [
-          {
-            date: new Date(),
-            stars: 23467238,
-          },
-        ],
+        label: 'Dataset',
+        data: data,
+        // borderColor: ,
+        // backgroundColor: Utils.transparentize(Utils.CHART_COLORS.red, 0.5),
+        pointStyle: 'circle',
+        pointRadius: 10,
+        pointHoverRadius: 15,
       },
-    ]
-  
-    const primaryAxis = React.useMemo(
-      (): AxisOptions<MyDatum> => ({
-        getValue: (datum: { date: any; }) => datum.date,
-      }),
-      []
-    )
-  
-    const secondaryAxes = React.useMemo(
-      (): AxisOptions<MyDatum>[] => [
-        {
-          getValue: datum => datum.stars,
-        },
-      ],
-      []
-    )
-  
-    return (
-      <Chart
-        options={{
-          data,
-          primaryAxis,
-          secondaryAxes,
-        }}
-      />
-    )
-  }
- 
+    ],
+  };
+
   return (
     <>
       <Box
@@ -260,21 +185,21 @@ const Dashboard = () => {
           />
         </SimpleGrid>
       </Box>
-      <Tooltip label={'Change Passwords'}>
         <Box
-          maxW={'100%'}
+          maxW={'90%'}
           w={'full'}
           bg={useColorModeValue('white', 'gray.800')}
           boxShadow={'2xl'}
           rounded={'md'}
           py={3}
+          px={3}
           overflow={'hidden'}
         >
-          {/* <Doughnut data={{}} /> */}
+          <Chart/>
         </Box>
-      </Tooltip>
     </>
   );
 };
 
 export default Dashboard;
+ 

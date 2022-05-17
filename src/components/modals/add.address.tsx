@@ -71,12 +71,6 @@ function WorkmanShip({
   var apiProvider = new AuthApiProvider();
   const appContext = useState(AppContext);
 
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'GMD',
-    minimumFractionDigits: 2,
-  });
-
   useEffect(() => {
     //  calculateting new total
     var s = Number.parseFloat(value.toString());
@@ -129,7 +123,7 @@ function WorkmanShip({
             <StatGroup>
               <Stat>
                 <StatLabel>Project Total</StatLabel>
-                <StatNumber>{formatter.format(newTotal)}</StatNumber>
+                <StatNumber>GMD {newTotal}</StatNumber>
                 <StatHelpText>
                   <StatArrow type="increase" />
                   {value}
@@ -138,7 +132,7 @@ function WorkmanShip({
 
               <Stat>
                 <StatLabel>Value</StatLabel>
-                <StatNumber>{ formatter.format(newValue)}</StatNumber>
+                <StatNumber>{newValue}</StatNumber>
               </Stat>
             </StatGroup>
             <FormControl isRequired>

@@ -20,7 +20,7 @@ import {
   Textarea,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { BiAddToQueue } from 'react-icons/bi';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
@@ -48,7 +48,7 @@ function NewItem({
   const [category, setCategory] = useState<String | null>(null);
 
   var apiProvider = new AuthApiProvider();
-  const appContext = useState(AppContext);
+  const appContext = useContext(AppContext);
 
   return (
     <>
@@ -84,7 +84,7 @@ function NewItem({
                 onChange={e => setCategory(e.target.value)}
               >
                 {categories.map((value: any) => {
-                  return <option value={value.toString()}>{value.name}</option>;
+                  return <option value={value._id}>{value.name}</option>;
                 })}
               </Select>
             </FormControl>
@@ -163,7 +163,7 @@ function NewItem({
                     category: category,
                   })
                   .then(data => {
-                    alert('item was succesfully added.');
+                    appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Item was succesfully added"}});
                     callback();
                     onClose();
                   })

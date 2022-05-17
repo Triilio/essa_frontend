@@ -17,7 +17,6 @@
     "axios": "^0.25.0",
     "bizcharts": "^4.1.15",
     "chart.js": "^3.7.1",
-    "faker": "^6.6.6",
     "framer-motion": "^4.1.17",
     "quilljs": "^0.18.1",
     "react": "^17.0.2",
@@ -58,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@faker-js/faker": "^6.2.0",
     "@types/react-table": "^7.7.9"
   }
 }

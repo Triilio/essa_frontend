@@ -1,82 +1,140 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Textarea,
-  Tooltip,
-  useDisclosure,
-} from '@chakra-ui/react';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { EditIcon } from '@chakra-ui/icons';
 import { AuthApiProvider } from '../../../../providers/api.provider';
 import AppContext from '../../../../utils/context';
-
-import Header from './header';
-import Amount from './amount';
-import Billing from './billing';
-import Footer from './footer';
-import Approved from './approved';
 import Category from './category';
+import { useParams } from 'react-router-dom';
+import { Logo } from '../../../../utils/images/logo';
 
-function Ui({
-  name,
-  price,
-  marketprice,
-  units,
-  supplier,
-  description,
-}: {
-  name: string;
-  price: number;
-  marketprice: number;
-  units: Object[];
-  supplier: string;
-  description: string;
-}) {
+function Ui() {
   // data
-  const [address, setAddress] = useState<String>();
   const [date, setDate] = useState<Date>();
   const [invoiceid, setInvoiceid] = useState<String>();
   const [customer, setCustomer] = useState<String>();
   const [list, setList] = useState<JSX.Element[]>();
 
-  var subtotal = 100000;
-  var contingency = 1222222;
-  var total_due = 12311232;
-  var workmanship = 12312312;
+  const apiContext = useContext(AppContext);
+  const param = useParams();
+
+  const apiProvider = new AuthApiProvider();
+  const [name, setName] = useState<String>();
+  const [description, setDescription] = useState<String>();
+  const [total, setTotal] = useState(0);
+  const [type, setType] = useState<String>();
+  const [items, setItems] = useState([]);
+  const [thread, setThread] = useState([]);
+  const [price, setPrice] = useState(0);
+  const [status, setStatus] = useState(0);
+  const [contingency, setContingency] = useState(0);
+  const [workmanship, setWorkmanship] = useState(0);
+
+  const [backer, setBacker] = useState<any>(null);
+  const [payments, setPayments] = useState([]);
+
+  // docs / service docs
+  const [requestdoc, setRequestDoc] = useState(null);
+  const [boq, setBOQ] = useState(null);
+  const [completioncert, setCompletioncert] = useState(null);
+  const [surveyreport, setSurveyreport] = useState(null);
+
+  const [category, setCategory] = useState<any[]>([]);
+
+  // docs / product docs
+  const [invoice, setInvoice] = useState(null);
+  const [deliverynote, setDeliverynote] = useState(null);
+  const [reciept, setReciept] = useState(null);
 
   useEffect(() => {
-    // getting the list of categories
-    var tempObject: any[] = [];
-    var anotherTempObject: any = {};
+    getData();
+  }, []);
 
-    units.forEach((element: any) => {
-      if (tempObject.includes(element.category)) {
-        anotherTempObject[element.category].push(element);
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'GMD',
+    minimumFractionDigits: 2,
+  });
+
+  const getData = () => {
+    return apiProvider
+      .getOneNegotiation(param.id + '')
+      .then((res: any) => {
+        setName(res.data.name);
+        setDescription(res.data.description);
+        setItems(res.data.items);
+        setThread(res.data.thread);
+        setType(res.data.type);
+        setStatus(res.data.status);
+        setBacker(res.data.backer);
+
+        setPayments(res.data.payments);
+        setCategory(res.data.categories);
+        setContingency(res.data.contingency | 0);
+        setWorkmanship(res.data.workmanship | 0);
+
+        // initing docs
+        setRequestDoc(res.data.docs.requestdoc);
+        setBOQ(res.data.docs.boq);
+        setCompletioncert(res.data.docs.completioncert);
+        setSurveyreport(res.data.docs.surveyreport);
+        setDeliverynote(res.data.docs.deliverynote);
+
+        var p = 0;
+        res.data.items.forEach(
+          ({ price, units }: { price: any; units: any }) => {
+            p +=
+              0 +
+              (Number.parseFloat(units) * Number.parseFloat(price.price) || 1);
+          }
+        );
+        // add contingency
+        p += price;
+        setPrice(p);
+      })
+      .catch(error => {
+        console.log(error);
+        alert('error');
+      });
+  };
+
+  useEffect(() => {
+    /**
+     * Sorting the items into categories
+     */
+
+    var sortedCategoryTracker: any[] = [];
+    var sortedCategoryHolder: any = {};
+
+    items.forEach((element: any) => {
+      if (sortedCategoryTracker.includes(element.category)) {
+        sortedCategoryHolder[element.category].list.push(element);
       } else {
-        tempObject.push(element.category);
-        anotherTempObject[element.category] = [];
-        anotherTempObject[element.category][0] = element;
+        sortedCategoryTracker.push(element.category);
+        sortedCategoryHolder[element.category] = {};
+        sortedCategoryHolder[element.category].list = [];
+        sortedCategoryHolder[element.category].list[0] = element;
+        // injecting category data in element
+        console.log('global categories', category);
+        console.log('global categories', category);
+        var currentCategory = category!.filter((e: any) => {
+          console.log('is %s = %s', e.id, element.category);
+          if (e.id === element.category) {
+            return e;
+          }
+        });
+        console.log('current Category', currentCategory);
+        sortedCategoryHolder[element.category].categoryObject = currentCategory;
       }
     });
     var tempList = [];
-    for (var key in anotherTempObject) {
-      if (anotherTempObject.hasOwnProperty(key)) {
+    for (var key in sortedCategoryHolder) {
+      if (sortedCategoryHolder.hasOwnProperty(key)) {
         // just so i can sleep at night.
-        tempList.push(<Category name={key} items={anotherTempObject[key]} />);
+        tempList.push(<Category data={sortedCategoryHolder[key]} />);
       }
     }
 
     setList(tempList);
-  }, []);
+  }, [items]);
 
   const UI = () => {
     return (
@@ -97,9 +155,10 @@ function Ui({
                       textIndent: '0pt',
                       lineHeight: '34pt',
                       textAlign: 'left',
+                      fontSize: '32pt',
                     }}
                   >
-                    INVOICE
+                    <b>INVOICE</b>
                   </p>
                 </td>
                 <td style={{ width: '154pt' }}>
@@ -141,12 +200,13 @@ function Ui({
                     }}
                   >
                     <span>
-                      <img
+                      {/* <img
                         width={172}
                         height={79}
                         alt="image"
                         src="004-110322BOQ-Version 2/Image_001.png"
-                      />
+                      /> */}
+                      <Logo />
                     </span>
                   </p>
                 </td>
@@ -218,7 +278,7 @@ function Ui({
                       textAlign: 'left',
                     }}
                   >
-                    {address}
+                    {'address'}
                   </p>
                 </td>
                 <td style={{ width: '208pt' }}>
@@ -238,7 +298,7 @@ function Ui({
               </tr>
             </div>
 
-  {/* Items */}
+            {/* Items */}
             {list?.map(e => {
               return e;
             })}
@@ -274,7 +334,7 @@ function Ui({
                       textAlign: 'left',
                     }}
                   >
-                    GMD 3,915,060.00
+                    {formatter.format(price + workmanship)}
                   </p>
                 </td>
               </tr>
@@ -290,7 +350,7 @@ function Ui({
                       textAlign: 'left',
                     }}
                   >
-                    <b>CONTINGENCY [5%]:</b>
+                    <b>CONTINGENCY [{contingency}%]:</b>
                   </p>
                 </td>
                 <td style={{ width: '10pt' }}>
@@ -308,7 +368,9 @@ function Ui({
                       textAlign: 'left',
                     }}
                   >
-                    GMD 195,753.00
+                    {formatter.format(
+                      ((price + workmanship) / 100) * contingency
+                    )}
                   </p>
                 </td>
               </tr>
@@ -350,53 +412,52 @@ function Ui({
                       textAlign: 'left',
                     }}
                   >
-                    GMD 400,000.00
+                    {formatter.format(workmanship)}
                   </p>
                 </td>
               </tr>
 
-              <tr style={{ height: '36pt', paddingTop: '5pt' }}>
+              <tr style={{ height: '24pt', paddingTop: '5pt' }}>
                 <td
                   style={{
-                    width: '100pt',
-                    borderTopStyle: 'solid',
-                    borderTopWidth: '5pt',
-                  }}
-                >
-                  <p style={{ textIndent: '0pt', textAlign: 'left' }}>
-                    <br />
-                  </p>
-                  <p
-                    className="s12"
-                    style={{
-                      paddingLeft: '5pt',
-                      textIndent: '0pt',
-                      textAlign: 'left',
-                    }}
-                  >
-                    <p>
-                      <b>Total Due</b>
-                    </p>
-                  </p>
-                </td>
-                <td
-                  style={{
-                    width: '157pt',
-                    borderTopStyle: 'solid',
-                    borderTopWidth: '5pt',
+                    width: '135pt',
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: '5pt',
                   }}
                   colSpan={2}
                 >
                   <p
-                    className="s19"
+                    className="s17"
                     style={{
-                      paddingTop: '11pt',
-                      paddingLeft: '9pt',
+                      paddingLeft: '5pt',
                       textIndent: '0pt',
+                      lineHeight: '11pt',
                       textAlign: 'left',
                     }}
                   >
-                    GMD 4,510,813.00
+                    <b>Total Due:</b>
+                  </p>
+                </td>
+                <td
+                  style={{
+                    width: '10pt',
+                    borderBottomStyle: 'solid',
+                    borderBottomWidth: '5pt',
+                  }}
+                >
+                  <p
+                    className="s18"
+                    style={{
+                      paddingLeft: '18pt',
+                      textIndent: '0pt',
+                      lineHeight: '11pt',
+                      textAlign: 'left',
+                    }}
+                  >
+                    {formatter.format(
+                      ((price + workmanship) / 100) * contingency +
+                        (price + workmanship)
+                    )}
                   </p>
                 </td>
               </tr>

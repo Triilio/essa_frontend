@@ -43,7 +43,11 @@ export default function Detail({
 
   const param = useParams();
   
-
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'GMD',
+    minimumFractionDigits: 2,
+  });
   
   var apiProvider = new AuthApiProvider();
 
@@ -78,12 +82,12 @@ export default function Detail({
           </Text>
           <Stack direction={'column'} align={'center'} justify={'center'}>
             <Text
-              fontSize={'4xl'}
+              fontSize={'3xl'}
               fontWeight={800}
               textColor={isSet ? 'green' : 'red'}
             >
               {/* {isSet ? <CheckCircleIcon /> : <WarningIcon color={'tomato'} />} */}
-              {type === "%" ? `${value}%` : `GMD ${value}`}
+              {type === "%" ? `${value}%` : formatter.format(value)}
             </Text>
             <Text>{isSet ? 'Added' : 'Not set'}</Text>
           </Stack>

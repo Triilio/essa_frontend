@@ -96,6 +96,14 @@ export default function NegotiationDetails() {
     return () => {};
   }, [refreshStateTracker]);
 
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'GMD',
+    minimumFractionDigits: 2,
+  });
+
+
   const getData = () => {
     return apiProvider
       .getOneNegotiation(param.id + '')
@@ -254,7 +262,7 @@ export default function NegotiationDetails() {
               color={'green.500'}
               rounded={'full'}
             >
-              GMD {price}
+              {formatter.format(price)}
             </Heading>
             <Text
               color={useColorModeValue('gray.500', 'gray.400')}
@@ -291,12 +299,7 @@ export default function NegotiationDetails() {
                     callback={function (): void {
                       setRefreshStateTracker(!refreshStateTracker);
                     }}
-                    name={''}
-                    price={0}
-                    marketprice={0}
                     units={items}
-                    supplier={''}
-                    description={''}
                   />
                 </>
               }

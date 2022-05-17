@@ -9,8 +9,9 @@ function NewClient({ callback }: { callback: () => void }) {
   const btnRef = React.useRef()
   const [businessname, setBusinessName] = useState('');
   const [contactName, setContactName] = useState('');
-  const [phone, setphone] = useState('');
-  const [email, setEmail] = useState('');
+  const [phone, setphone] = useState<String>();
+  const [email, setEmail] = useState<String>();
+  const [address, setAddress] = useState<String>();
   const [isloading, setIsloading] = useState(false);
 
 
@@ -52,6 +53,10 @@ function NewClient({ callback }: { callback: () => void }) {
               <FormLabel htmlFor='email'>Email</FormLabel>
               <Input id='email' onChange={(e) => setEmail(e.target.value)} placeholder="Email address" />
             </FormControl>
+            <FormControl>
+              <FormLabel htmlFor='email'>Address</FormLabel>
+              <Textarea id='address' onChange={(e) => setAddress(e.target.value)} placeholder="eg, Bakau Cape Point, 1324 Street" />
+            </FormControl>
             <Text p={3} size={"5px"}>
               The user will be send an email invitation to login to the system.
             </Text>
@@ -62,7 +67,7 @@ function NewClient({ callback }: { callback: () => void }) {
             </Button>
             <Button isLoading={isloading} onClick={async () => {
               setIsloading(true);
-              apiProvider.createClient({ businessname: businessname, name: contactName, phone: phone, email: email }).then((data) => {
+              apiProvider.createClient({ businessname: businessname, name: contactName, phone: phone, email: email, address: address }).then((data) => {
                 alert("User Successfully created")
                 console.log(data)
                 callback();

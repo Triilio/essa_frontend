@@ -19,7 +19,10 @@ import {
     return (
       <>
 
-        <Modal isOpen={appContext.modalstate.simplemodal.isOpen} onClose={onClose}>
+        <Modal isOpen={appContext.modalstate.simplemodal.isOpen} onClose={() => {
+                appContext.setModalState({simplemodal : {isOpen:false,icon:null,title:"", message:""}});
+          onClose();
+          }}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>{appContext.modalstate.simplemodal.title}</ModalHeader>
@@ -30,7 +33,8 @@ import {
             </ModalBody>
             <ModalFooter>
               <Button colorScheme='blue' mr={3} onClick={()=>{
-                appContext.modalstate.simplemodal = {isOpen:false,icon:null,title:"Success", message:"Signup Operation Successfull"};
+                appContext.setModalState({simplemodal : {isOpen:false,icon:null,title:"", message:""}});
+                onClose();
               }}>
                 Close
               </Button>

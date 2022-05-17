@@ -508,5 +508,24 @@ class AuthApiProvider {
         .finally(() => {});
     });
   };
+
+
+
+  valueOvertime = async () => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${this.baseurl}/stats/valueovertime`)
+        .then(data => {
+          console.log("value over time", data.data)
+          resolve(data.data);
+        })
+        .catch(error => {
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+
 }
 export { AuthApiProvider };

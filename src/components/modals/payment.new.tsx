@@ -1,8 +1,8 @@
 import { Alert, Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Textarea, useDisclosure } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { BiAddToQueue } from 'react-icons/bi';
 import { AuthApiProvider } from '../../providers/api.provider';
-import AppContext from '../../utils/context';
+import AppContext from './../../utils/context';
 
 function NewPayment({ id, callback }: { id: String, callback: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -16,7 +16,7 @@ function NewPayment({ id, callback }: { id: String, callback: () => void }) {
 
 
   var apiProvider = new AuthApiProvider()
-  const appContext = useState(AppContext);
+  const appContext = useContext(AppContext);
 
 
 
@@ -66,12 +66,13 @@ function NewPayment({ id, callback }: { id: String, callback: () => void }) {
             onClick={() => {
               setIsloading(!isloading)
               apiProvider.addPayment({orderid:id,amount:amount, date:date, note:note}).then((data)=>{
-                alert("Payment was succesfully added.")
+                // alert("Payment was succesfully added.")
+                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Payment was Successfully Added"}});
                 callback();
                 onClose()
               }).catch((error)=>{
                 console.log(error)
-                alert("An error Occured, please try again")
+                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Error", message:"Error Occured, Please try again"}});
                 setIsloading(!isloading)
               });
             }}>
