@@ -57,6 +57,7 @@ import Category from '../cards/categories';
 import AddContengency from '../modals/add.contengency';
 import WorkmanShip from '../modals/add.workmanship';
 import { workerData } from 'worker_threads';
+import NewDocument from '../modals/document.new';
 
 export default function NegotiationDetails() {
   const apiContext = useContext(AppContext);
@@ -75,9 +76,11 @@ export default function NegotiationDetails() {
 
   const [backer, setBacker] = useState<any>(null);
   const [payments, setPayments] = useState([]);
+  const [expenditure, setExpenditure] = useState([]);
 
   // docs / service docs
   const [requestdoc, setRequestDoc] = useState(null);
+  const [documents, setDocuments] = useState<any>([]);
   const [boq, setBOQ] = useState(null);
   const [completioncert, setCompletioncert] = useState(null);
   const [surveyreport, setSurveyreport] = useState(null);
@@ -117,11 +120,13 @@ export default function NegotiationDetails() {
         setBacker(res.data.backer);
 
         setPayments(res.data.payments);
+        setExpenditure(res.data.expenditure);
         setCategory(res.data.categories);
         setContingency(res.data.contingency | 0);
         setWorkmanship(res.data.workmanship | 0);
 
         // initing docs
+        setDocuments(res.data.documents);
         setRequestDoc(res.data.docs.requestdoc);
         setBOQ(res.data.docs.boq);
         setCompletioncert(res.data.docs.completioncert);
@@ -208,6 +213,29 @@ export default function NegotiationDetails() {
               }}
             />
           </>
+        );
+      },
+    },
+  ];
+
+  const doccolumns = [
+    // id, amount, name, items, status, number
+    {
+      name: 'Name',
+      selector: (row: any) => row.name,
+      sortable: true,
+    },
+    {
+      name: 'file',
+      selector: (row: any) => row.file,
+      sortable: true,
+    },
+    {
+      name: 'Actions',
+      selector: (row: any) => row.note,
+      format: (row: any, index: any) => {
+        return (
+          <></>
         );
       },
     },
@@ -315,120 +343,32 @@ export default function NegotiationDetails() {
                 // nav(row._id);
               }}
             />
-            <Tooltip label={'Documents'}>
-              <Box
-                maxW={'100%'}
-                w={'full'}
-                bg={useColorModeValue('white', 'gray.800')}
-                boxShadow={'2xl'}
-                rounded={'md'}
-                py={3}
-                overflow={'hidden'}
-              >
-                <Stack
-                  textAlign={'center'}
-                  p={3}
-                  color={useColorModeValue('gray.800', 'white')}
-                  align={'flex-start'}
-                >
-                  <Text
-                    fontSize={'md'}
-                    fontWeight={500}
-                    bg={useColorModeValue('green.50', 'green.900')}
-                    p={2}
-                    px={3}
-                    color={'green.500'}
-                    rounded={'full'}
-                  >
-                    Documents
-                  </Text>
-                </Stack>
-
-                <Box
-                  bg={useColorModeValue('gray.50', 'gray.900')}
-                  px={6}
-                  py={1}
-                >
-                  <HStack m={2}>
-                    {/* Request Letter */}
-                    <Document
-                      component={
-                        <GenerateRequestDoc
-                          id={`${param.id}`}
-                          initialvalue={requestdoc}
-                          callback={() =>
-                            setRefreshStateTracker(!refreshStateTracker)
-                          }
-                        />
-                      }
-                      label={'Request Letter'}
-                      tooltip={'request letter'}
-                      isSet={requestdoc}
-                    />
-
-                    {/* Completion Certification */}
-                    {type === 'Service' ? (
-                      <Document
-                        component={
-                          <GenerateSurveyReport
-                            id={`${param.id}`}
-                            initialvalue={surveyreport}
-                            callback={() =>
-                              setRefreshStateTracker(!refreshStateTracker)
-                            }
-                          />
-                        }
-                        label={'Survey Report'}
-                        tooltip={'Survey Report'}
-                        isSet={surveyreport}
-                      />
-                    ) : (
-                      <></>
-                    )}
-
-                    {/* Completion Certification */}
-                    {type === 'Service' ? (
-                      <Document
-                        component={
-                          <GenerateCompletionCertification
-                            id={`${param.id}`}
-                            initialvalue={completioncert}
-                            callback={() =>
-                              setRefreshStateTracker(!refreshStateTracker)
-                            }
-                          />
-                        }
-                        label={'Completion Certification'}
-                        tooltip={'Upload a Completion Certification Document'}
-                        isSet={completioncert}
-                      />
-                    ) : (
-                      <></>
-                    )}
-
-                    {/* Delivery Note */}
-                    {type === 'Product' ? (
-                      <Document
-                        component={
-                          <GenerateDeliveryNote
-                            id={`${param.id}`}
-                            initialvalue={deliverynote}
-                            callback={() =>
-                              setRefreshStateTracker(!refreshStateTracker)
-                            }
-                          />
-                        }
-                        label={'Delivery Note'}
-                        tooltip={'Delivery note'}
-                        isSet={deliverynote}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </HStack>
-                </Box>
-              </Box>
-            </Tooltip>
+           
+            <DataTable
+              title={
+                <>
+                  Project Documents
+                  <NewDocument
+                    categories={category}
+                    id={param.id + ''}
+                    callback={function (): void {
+                      setRefreshStateTracker(!refreshStateTracker);
+                    }}
+                  />
+                </>
+              }
+              columns={doccolumns}
+              data={documents}
+              selectableRows
+              // defaultSortAsc={false}
+              striped={true}
+              pagination
+              pointerOnHover
+              onRowClicked={(row, event) => {
+                // alert("clicked"+row._id)
+                // nav(row._id);
+              }}
+            />
 
             <Tooltip label={'Documents'}>
               <Box
@@ -519,7 +459,7 @@ export default function NegotiationDetails() {
               }}
             />
             <Expenditure
-              items={payments}
+              items={expenditure}
               tooltip={'Incured Expenditure'}
               callback={() => {
                 setRefreshStateTracker(!refreshStateTracker);

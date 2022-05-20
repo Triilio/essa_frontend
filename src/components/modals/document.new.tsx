@@ -1,17 +1,40 @@
-import { Alert, Button, FormControl, FormLabel, Input, InputGroup, InputLeftAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Textarea, useDisclosure } from '@chakra-ui/react';
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
 import React, { useState, useContext, useRef } from 'react';
 import { BiAddToQueue } from 'react-icons/bi';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
-import { useToast } from '@chakra-ui/react'
+import { ButtonGroup } from '@chakra-ui/react';
 
-function NewExpenditure({ id, callback }: { id: string, callback: () => void }) {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = React.useRef()
+function NewDocument({
+  categories,
+  id,
+  callback,
+}: {
+  categories: Object[];
+  id: string;
+  callback: () => void;
+}) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isloading, setIsloading] = useState(false);
-
-  const [amount, setAmount] = useState(0);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  
   const [note, setNote] = useState<string | undefined>(undefined);
   const [title, setTitle] = useState<string | undefined>(undefined);
   // const [formData, setFormData] = useState<FormData | undefined>();
@@ -20,55 +43,39 @@ function NewExpenditure({ id, callback }: { id: string, callback: () => void }) 
   const hiddenFileInput = useRef(null);
 
 
-  var apiProvider = new AuthApiProvider()
+  var apiProvider = new AuthApiProvider();
   const appContext = useContext(AppContext);
 
   return (
     <>
       <Button
-      onClick={onOpen} 
-      leftIcon={<BiAddToQueue />}
-          mt={10}
-          w={'300px'}
-          bg={'red.400'}
-          color={'white'}
-          rounded={'xl'}
-          boxShadow={'0 5px 20px 0px rgb(72 187 120 / 43%)'}
-          _hover={{
-            bg: 'red.500',
-          }}
-          _focus={{
-            bg: 'red.500',
-          }}>
-          Add Expenditure
-        </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+        m={1}
+        onClick={onOpen}
+        leftIcon={<BiAddToQueue />}
+        colorScheme="teal"
+        size="md"
+      >
+        Upload a Document
+      </Button>
+      <Modal size={'4xl'} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add a new Expenditure</ModalHeader>
+        <ModalHeader>Add a new document</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
           <FormControl isRequired>
               <FormLabel htmlFor='title'>Title</FormLabel>
-              <Input id='title' type="text" onChange={(e)=>setTitle(e.target.value)} placeholder='title' />
+              <Input id='title' type="text" onChange={(e)=>setTitle(e.target.value)} placeholder='Title' />
           </FormControl>
           <FormControl isRequired>
-              <FormLabel htmlFor='name'>Amount</FormLabel>
-              <Input id='amount' type="number" onChange={(e)=>setAmount(Number.parseInt(e.target.value))} placeholder='Amount, eg 20 000' />
+              <FormLabel htmlFor='note'>Note</FormLabel>
+              <Textarea id='note' onChange={(e)=>setNote(e.target.value)} placeholder='Notes' />
           </FormControl>
           <FormControl isRequired>
-              <FormLabel htmlFor='units'>Date</FormLabel>
-              <Input id='date' type={"date"} onChange={(e)=>setDate(new Date(e.target.value))} placeholder='Number of units' />
-          </FormControl>
-          <FormControl isRequired>
-              <FormLabel htmlFor='expenditure_note'>Note</FormLabel>
-              <Textarea id='expenditure_note' onChange={(e)=>setNote(e.target.value)} placeholder='Expenditure Note' />
-          </FormControl>
-          <FormControl isRequired>
-              <FormLabel htmlFor='expenditure_file'>Reciept</FormLabel>
+              <FormLabel htmlFor='project_file'>file</FormLabel>
               <InputGroup>
               <InputLeftAddon children='File' />
-              <Input type='file' multiple ref={hiddenFileInput}
+              <Input type='file' ref={hiddenFileInput}
                 style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none' }} onChange={(e) => {
                   // Update the formData object  
                   
@@ -90,7 +97,7 @@ function NewExpenditure({ id, callback }: { id: string, callback: () => void }) 
             </Button>
             <Button variant='ghost' 
             onClick={() => {
-              if(!title || !note || !amount || !formData || !date){
+              if(!title || !note || !formData ){
                 toast({
                   title: 'Incomplete Data',
                   description: "Please submit all required fields",
@@ -102,11 +109,9 @@ function NewExpenditure({ id, callback }: { id: string, callback: () => void }) 
               }
               setIsloading(!isloading)
               formData?.append('orderid',id);
-              formData?.append('date',date!.toString());
+              formData?.append('name',title!);
               formData?.append('note',note!);
-              formData?.append('title',title!);
-              formData?.append('amount',amount!.toString());
-              apiProvider.addExpenditure(formData).then((data)=>{
+              apiProvider.addDocument(formData).then((data)=>{
                 callback();
                 appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Expenditure was Successfully Added"}});
                 onClose()
@@ -121,7 +126,7 @@ function NewExpenditure({ id, callback }: { id: string, callback: () => void }) 
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }
 
-export default NewExpenditure; 
+export default NewDocument;

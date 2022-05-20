@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 
-function RemovePayment({ id, note, amount, date, callback }: { id: String, note: String, amount: Number, date: Date, callback: () => void }) {
+function RemoveDocument({ id, note, amount, date, callback }: { id: String, note: String, amount: Number, date: Date, callback: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isloading, setIsloading] = useState(false);
   const param = useParams();
@@ -26,7 +26,7 @@ function RemovePayment({ id, note, amount, date, callback }: { id: String, note:
           <ModalHeader>Delete Expenditure</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Are you sure you want to remove this Expenditure Item, <br/>
+            Are you sure you want to remove this payment, <br/>
             <strong>Amount</strong>: {amount} <br/>
             <strong>Date</strong>: {date} <br/>
             <strong>Note</strong>: {note} <br/>
@@ -36,7 +36,7 @@ function RemovePayment({ id, note, amount, date, callback }: { id: String, note:
               No
             </Button>
             <Button colorScheme='red' onClick={()=>{
-              apiProvider.removeExpenditure({id:param.id,expenditureid:id}).then((data)=>{
+              apiProvider.removeDocument({id:param.id,documentid:id}).then((data)=>{
                 appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Expenditure was Successfully Removed"}});
                 onClose()
                 callback()
@@ -51,4 +51,4 @@ function RemovePayment({ id, note, amount, date, callback }: { id: String, note:
   )
 }
 
-export default RemovePayment; 
+export default RemoveDocument; 

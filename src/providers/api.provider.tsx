@@ -411,6 +411,82 @@ class AuthApiProvider {
     });
   };
 
+  addExpenditure = async (formdata: any) => {
+    return new Promise((resolve, reject) => {
+      console.log('data', formdata);
+      axios
+        .post(`${this.baseurl}/orders/expenditure`, formdata)
+        .then(data => {
+          console.log(data.data);
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+  removeExpenditure = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${this.baseurl}/orders/expenditure/delete`, data)
+        .then(data => {
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+  addDocument = async (formdata: any) => {
+    return new Promise((resolve, reject) => {
+      console.log('data', formdata);
+      axios
+        .post(`${this.baseurl}/orders/document`, formdata)
+        .then(data => {
+          console.log(data.data);
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
+  removeDocument = async (data: any) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .post(`${this.baseurl}/orders/document/delete`, data)
+        .then(data => {
+          resolve(data.data);
+        })
+        .catch(error => {
+          if (error.statusCode === 401) {
+            // log user out cuz server doesn't recognise the token
+            this.appContext.signout(() => {});
+          }
+          reject(error);
+        })
+        .finally(() => {});
+    });
+  };
+
   addCategory = async (data: any) => {
     return new Promise((resolve, reject) => {
       console.log('data', data);

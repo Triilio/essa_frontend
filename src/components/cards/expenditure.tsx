@@ -21,15 +21,15 @@ import { useParams } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 import RemoveItem from '../modals/item.delete';
 import EditItem from '../modals/item.edit';
-import NewPayment from '../modals/payment.new';
-import RemovePayment from '../modals/payment.delete';
+import NewExpenditure from '../modals/expenditure.new';
+import RemoveExpenditure from '../modals/expenditure.delete';
 
 export default function Expenditure({items, tooltip, callback }: { items : any, tooltip:string, callback: () => void }) {
   const hiddenFileInput = useRef(null);
   var apiProvider = new AuthApiProvider()
   const appContext = useState(AppContext);
   const param = useParams();
-
+  
   const [requestLetterAdded, setRequestLetterAdded] = useState(false);
   const [formData, setFormData] = useState<FormData>();
   // const [items, setItems] = useState([]);
@@ -39,13 +39,13 @@ export default function Expenditure({items, tooltip, callback }: { items : any, 
   const columns = [
     // id, amount, name, items, status, number
     {
-      name: 'Date',
-      selector: (row: any) => row.date,
+      name: 'Title',
+      selector: (row: any) => row.title,
       sortable: true,
       format:(row:any, index:any)=>{
         // var sdate = row.date.toString().split("-")
         return(
-          <>{row.date}</>
+          <>{row.title}</>
         )
       }
     },
@@ -61,7 +61,7 @@ export default function Expenditure({items, tooltip, callback }: { items : any, 
         console.log("row => ",row)
         return (
           <>
-            <RemovePayment
+            <RemoveExpenditure
               id={row._id}
               note={row.note}
               amount={row.amount}
@@ -111,9 +111,9 @@ export default function Expenditure({items, tooltip, callback }: { items : any, 
           px={3}
           color={'green.500'}
           rounded={'full'}>
-          Payments Tracker
+          Expenditure Tracker
         </Text>
-        <NewPayment id={param.id+""} callback={function (): void {
+        <NewExpenditure id={param.id+""} callback={function (): void {
             callback()
           } }/>
       </Stack>
