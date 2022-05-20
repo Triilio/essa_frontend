@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import axios from 'axios';
 import AppContext from './../utils/context';
-import { resolve } from 'path/posix';
+
 /**
  * This represents some generic auth provider API, like Firebase.
  */
@@ -466,6 +466,26 @@ class AuthApiProvider {
           reject(error);
         })
         .finally(() => {});
+    });
+  };
+
+  getDocument = async ({type, id} : {type: string, id:string}) => {
+    
+    return new Promise((resolve, reject) => {
+   
+    //   axios
+    //     .get(`${this.baseurl}/orders/download?id=${id}&type=${type}`)
+    //     .then(data => {
+    //       resolve(data.data);
+    //     })
+    //     .catch(error => {
+    //       if (error.statusCode === 401) {
+    //         // log user out cuz server doesn't recognise the token
+    //         this.appContext.signout(() => {});
+    //       }
+    //       reject(error);
+    //     })
+    //     .finally(() => {});
     });
   };
 

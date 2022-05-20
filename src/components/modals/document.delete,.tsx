@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
 
-function RemoveDocument({ id, note, amount, date, callback }: { id: String, note: String, amount: Number, date: Date, callback: () => void }) {
+function RemoveDocument({ id, note, name, file, callback }: { id: String, note: String, name:String, file:String, callback: () => void }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isloading, setIsloading] = useState(false);
   const param = useParams();
@@ -17,18 +17,18 @@ function RemoveDocument({ id, note, amount, date, callback }: { id: String, note
 
   return (
     <>
-        <Tooltip label="Delete Expenditure Record">
+        <Tooltip label="Delete Document">
       <Button m={1} onClick={onOpen} leftIcon={<DeleteIcon />} colorScheme='red' size='sm' />
           </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Delete Expenditure</ModalHeader>
+          <ModalHeader>Delete Document</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Are you sure you want to remove this payment, <br/>
-            <strong>Amount</strong>: {amount} <br/>
-            <strong>Date</strong>: {date} <br/>
+            Are you sure you want to remove this document, <br/>
+            <strong>Name</strong>: {name} <br/>
+            <strong>file</strong>: {file} <br/>
             <strong>Note</strong>: {note} <br/>
           </ModalBody>
           <ModalFooter>
@@ -37,11 +37,11 @@ function RemoveDocument({ id, note, amount, date, callback }: { id: String, note
             </Button>
             <Button colorScheme='red' onClick={()=>{
               apiProvider.removeDocument({id:param.id,documentid:id}).then((data)=>{
-                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Expenditure was Successfully Removed"}});
+                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"Success", message:"Document was Successfully Deleted"}});
                 onClose()
                 callback()
               }).catch(()=>{
-                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"ERROR", message:"An error occured, please try again."}});
+                appContext.setModalState({simplemodal : {isOpen:true,icon:null,title:"ERROR", message:id+" An error occured, please try again."}});
               })
             }} >Yes</Button>
           </ModalFooter>

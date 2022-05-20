@@ -58,6 +58,8 @@ import AddContengency from '../modals/add.contengency';
 import WorkmanShip from '../modals/add.workmanship';
 import { workerData } from 'worker_threads';
 import NewDocument from '../modals/document.new';
+import RemoveDocument from '../modals/document.delete,';
+import DownloadDocument from '../modals/document.download';
 
 export default function NegotiationDetails() {
   const apiContext = useContext(AppContext);
@@ -201,7 +203,7 @@ export default function NegotiationDetails() {
             <EditItem
               id={row._id}
               callback={function (): void {
-                throw new Error('Function not implemented.');
+                setRefreshStateTracker(!refreshStateTracker);
               }}
             />
             <RemoveItem
@@ -209,7 +211,7 @@ export default function NegotiationDetails() {
               name={row.name}
               price={row.price.price}
               callback={function (): void {
-                throw new Error('Function not implemented.');
+                setRefreshStateTracker(!refreshStateTracker);
               }}
             />
           </>
@@ -235,7 +237,16 @@ export default function NegotiationDetails() {
       selector: (row: any) => row.note,
       format: (row: any, index: any) => {
         return (
-          <></>
+          <>
+          <DownloadDocument docid={row.file} type={'doc'} callback={function (): void {
+              throw new Error('Function not implemented.');
+            } } />
+            <RemoveDocument id={row._id} name={row.name} file={row.file} note={row.note} 
+          callback={function (): void {
+            setRefreshStateTracker(!refreshStateTracker);
+          }}
+          />
+          </>
         );
       },
     },
