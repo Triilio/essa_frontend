@@ -30,6 +30,8 @@ import AppContext from '../../utils/context';
 import Complete from '../sections/pdfs/invoice/complete';
 import ReactToPrint, { useReactToPrint } from 'react-to-print';
 import Ui from '../sections/pdfs/invoice/ui';
+var converter = require('number-to-words');
+
 
 function PrintIvoice({
   id,
@@ -57,10 +59,12 @@ function PrintIvoice({
     content: () => componentRef.current,
   });
 
+  const [version, setVersion] = useState('');
+
   class ComponentToPrint extends React.Component {
     render() {
       return (
-        <Ui/>
+        <Ui ver={version}/>
       );
     }
   }
@@ -74,8 +78,8 @@ function PrintIvoice({
         <Portal>
           <MenuList>
             <MenuGroup title="Printable Documents">
-              <MenuItem onClick={onOpenInvoice}>Invoice</MenuItem>
-              <MenuItem onClick={onOpenBoq}>Bill Of Quantity</MenuItem>
+              <MenuItem onClick={() => {setVersion('invoice'); onOpenInvoice();}}>Invoice</MenuItem>
+              <MenuItem onClick={() => {setVersion('bill');onOpenBoq();}}>Bill Of Quantity</MenuItem>
             </MenuGroup>
           </MenuList>
         </Portal>
@@ -102,6 +106,32 @@ function PrintIvoice({
               onClick={handlePrint}
             >
               Print Invoice
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isOpenBoq} onClose={onCloseBoq} size={'4xl'}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>BILL OF QUANTITY {id}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <ComponentToPrint ref={componentRef} />
+            {/* <ComponentToPrint ref={el => (componentRef = el)} /> */}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onCloseBoq}>
+              Cancel
+            </Button>
+            <Button
+              m={1}
+              // leftIcon={<DownloadIcon />}
+              colorScheme="teal"
+              size="md"
+              onClick={handlePrint}
+            >
+              Print Bill of Quantity
             </Button>
           </ModalFooter>
         </ModalContent>

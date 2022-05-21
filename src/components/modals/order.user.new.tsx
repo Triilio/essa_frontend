@@ -34,7 +34,7 @@ function  NewOrder({
   const btnRef = React.useRef();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [ordertype, setOrderType] = useState('');
+  const [ordertype, setOrderType] = useState('Service');
   const [company, setCompany] = useState('');
   const param = useParams();
   const id = param.id;
@@ -89,7 +89,7 @@ function  NewOrder({
                 <option value="Product">Product</option>
               </Select>
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
               <FormLabel htmlFor="order_type">Company</FormLabel>
               <Select
                 w="100%"
@@ -104,7 +104,7 @@ function  NewOrder({
                 <option value="datu_trading">DARU TRADING</option>
                 <option value="express_logistics">XPRESS LOGISTICS</option>
               </Select>
-            </FormControl>
+            </FormControl> */}
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
@@ -114,13 +114,6 @@ function  NewOrder({
               variant="ghost"
               onClick={() => {
                 setIsloading(true);
-                const dataa = {
-                  name,
-                  description,
-                  as: param['id'],
-                  ordertype,
-                  company,
-                };
                 apiProvider
                   .CreateOrderForCurrentUser(
                     name,
