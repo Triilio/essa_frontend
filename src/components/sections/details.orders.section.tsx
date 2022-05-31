@@ -32,34 +32,24 @@ import {
   MenuDivider,
   Portal,
 } from '@chakra-ui/react';
-import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
-import { MdLocalShipping } from 'react-icons/md';
 import { AuthApiProvider } from '../../providers/api.provider';
 import { useParams } from 'react-router-dom';
 import AppContext from '../../utils/context';
-import ItemList from '../tables/item.table';
 import NewItem from '../modals/item.new';
 import EditItem from '../modals/item.edit';
 import RemoveItem from '../modals/item.delete';
-import RequestLetter from '../cards/request.letter';
 import PrintIvoice from '../modals/item.print';
-import Document from '../cards/doc.add';
 import Payments from '../cards/payments';
-import NewPayment from '../modals/payment.new';
-import GenerateRequestDoc from '../modals/generate.requestdoc';
-import GenerateSurveyReport from '../modals/generate.surveyreport';
-import GenerateDeliveryNote from '../modals/generate.deliverynote';
-import GenerateCompletionCertification from '../modals/generate.completioncert';
 import Detail from './../cards/detail.add';
 import { Spinner } from '@chakra-ui/react';
 import Expenditure from '../cards/expenditure';
 import Category from '../cards/categories';
 import AddContengency from '../modals/add.contengency';
 import WorkmanShip from '../modals/add.workmanship';
-import { workerData } from 'worker_threads';
-import NewDocument from '../modals/document.new';
+// import NewDocument from '../modals/document.new';
 import RemoveDocument from '../modals/document.delete,';
 import DownloadDocument from '../modals/document.download';
+import NewDocument from '../modals/document.new';
 
 export default function NegotiationDetails() {
   const apiContext = useContext(AppContext);

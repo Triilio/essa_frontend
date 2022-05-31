@@ -35,10 +35,8 @@ import {
 } from 'react-icons/all';
 import { AuthApiProvider } from '../../providers/api.provider';
 import AppContext from '../../utils/context';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 
-function AddContengency({
+function AddContengency({ 
   id,
   initialvalue,
   projecttotal,

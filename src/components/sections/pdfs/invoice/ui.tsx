@@ -5,8 +5,9 @@ import AppContext from '../../../../utils/context';
 import Category from './category';
 import { useParams } from 'react-router-dom';
 import { Logo } from '../../../../utils/images/logo';
+var converter = require('number-to-words');
 
-function Ui() {
+function Ui({ver}:{ver: string}) {
   // data
   const [date, setDate] = useState<Date>();
   const [invoiceid, setInvoiceid] = useState<String>();
@@ -158,7 +159,7 @@ function Ui() {
                       fontSize: '32pt',
                     }}
                   >
-                    <b>INVOICE</b>
+                    {ver == 'invoice' ? <b>INVOICE</b> : <b>BILL OF QUANTITY</b>}
                   </p>
                 </td>
                 <td style={{ width: '154pt' }}>
@@ -262,7 +263,11 @@ function Ui() {
                       textAlign: 'left',
                     }}
                   >
+                    {ver == 'invoice' ?  
+                    <>
                     Invoiced to &gt;&gt; Invoice #
+                    </>
+                    : <b>BILL OF QUANTITY FOR</b>}
                     <span style={{ color: '#525252' }}>{invoiceid}</span>
                   </p>
                 </td>
@@ -291,7 +296,7 @@ function Ui() {
                       textAlign: 'left',
                     }}
                   >
-                    Invoice Date{' '}
+                    {ver == 'invoice' ? <b>INVOICE DATE</b> : <b>BILL OF QUANTITY DATE</b>} 
                     <span style={{ color: '#525252' }}>{date}</span>
                   </p>
                 </td>
@@ -501,8 +506,8 @@ function Ui() {
                       textAlign: 'left',
                     }}
                   >
-                    Four Million Five Hundred and Ten Thousand Eight Hundred and
-                    Thirteen Dalasis Only.
+                    {converter.toWords(((price + workmanship) / 100) * contingency +
+                        (price + workmanship))} Dalasis Only.
                   </p>
                 </td>
               </tr>
