@@ -15,7 +15,7 @@ interface signUpData {
 class AuthApiProvider {
   constructor() {}
 
-  baseurl = 'http://localhost:3000';
+  baseurl = 'http://isaapi.triilio.gm:3000';
 
   appContext = useContext(AppContext);
 
