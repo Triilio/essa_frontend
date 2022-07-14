@@ -14,8 +14,6 @@ import {
   DrawerContent,
   Text,
   useDisclosure,
-  BoxProps,
-  FlexProps,
   Menu,
   MenuButton,
   MenuDivider,
@@ -44,7 +42,7 @@ import AppContext from '../utils/context';
 const LinkItems = [
   { name: 'Dashboard', icon: FiHome, path: "/dashboard",auth:['Client','Admin','God'] },
   { name: 'Ongoing Orders', icon: FiTrendingUp, path: "/orders", auth:['Client','Admin','God']},
-  { name: 'Completed Orders', icon: FiStar, path: "/invoices",auth:['Client','Admin','God'] },
+  // { name: 'Completed Orders', icon: FiStar, path: "/invoices",auth:['Client','Admin','God'] },
   // { name: 'Submitted Orders', icon: FiStar, path: "/submitted",auth:['Client' ,'Admin','God'] },
   { name: 'Clients', icon: FiStar, path: "/clients", auth:['Client','Admin','God'] },
   // { name: 'Client Orders', icon: FiStar, path: "#", auth:['Admin','God'] },
@@ -53,12 +51,14 @@ const LinkItems = [
 
 export default function Home({ children }: { children: JSX.Element }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const appContext = useContext(AppContext);
 
   return (
-    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+    <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}
+      display={{ base: 'none', md: 'block' }}
+    >
       <SidebarContent
         onClose={() => onClose}
-      // display={{ base: 'none', md: 'block' }}
       />
       <Drawer
         autoFocus={false}
@@ -82,7 +82,6 @@ export default function Home({ children }: { children: JSX.Element }) {
 }
 
 
-
 const SidebarContent = ({ onClose, ...rest }: { onClose: any }) => {
   const appContext = useContext(AppContext);
   return (
@@ -103,8 +102,7 @@ const SidebarContent = ({ onClose, ...rest }: { onClose: any }) => {
       </Flex>
       {LinkItems.map(({ name, icon, path, auth }: { name: any, icon: any, path: String, auth:Array<String> }) => {
         // checking if the current user has rights to see this ui element
-        console.log(appContext.user.type)
-        if(!auth.includes(appContext.user.type))return;
+        // if(!auth.includes(appContext.user.type))return;
         return (<NavItem key={name} icon={icon} path={path}>
           {name}
         </NavItem>);
@@ -146,6 +144,7 @@ const NavItem = ({ icon, children, path, ...rest }: { icon: any, children: any, 
 };
 
 const MobileNav = ({ onOpen, ...rest }: { onOpen: any }) => {
+  const appContext = useContext(AppContext);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -198,9 +197,9 @@ const MobileNav = ({ onOpen, ...rest }: { onOpen: any }) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Mario Gomez</Text>
+                  <Text fontSize="sm">Admin</Text>
                   <Text fontSize="xs" color="gray.600">
-                    GOD
+                    
                   </Text>
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -211,11 +210,14 @@ const MobileNav = ({ onOpen, ...rest }: { onOpen: any }) => {
             <MenuList
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
-              <MenuItem>Profile</MenuItem>
+              {/* <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
+              <MenuItem>Billing</MenuItem> */}
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem 
+              onClick={()=>{appContext.signout(()=>{
+                 
+              })}}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

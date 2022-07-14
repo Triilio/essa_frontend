@@ -87,11 +87,13 @@ import {
                 
                     if(res !== null){
                       console.log(res);
+                      console.log('token =>',res.token);
                       axios.defaults.headers.common = {
                         "X-auth-token": res.token,
                       };
+                      console.log(window.localStorage.getItem('user'))
+                      appContext.setToken(res.token);
                       appContext.setUser(res.user);
-                      // navigate('/');
                     }
                   }}
                   >

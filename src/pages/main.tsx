@@ -140,7 +140,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  let signout = (callback: VoidFunction) => {
+  let signout = () => {
     setUser(null);
     return authApiProvider.signout();
   };
@@ -183,16 +183,16 @@ function RequireAuth({ children }: { children: JSX.Element }) {
   let auth = useAuth();
   let location = useLocation();
 
-  if (auth.user === null) {
+  if (auth.user == null) {
+    console.log("user is null on the session");
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
     // along to that page after they login, which is a nicer user experience
     // than dropping them off on the home page.
-    if (window.localStorage.getItem('user') != null) {
-      // use has a login session saved
+    if (window.localStorage.getItem('user') == null) {
+      console.log("user is also null on the storage");
+      return <Navigate to="/login" state={{ from: location }} replace />;
     }
-
-    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return children;
@@ -201,8 +201,6 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 function RequireNoAuth({ children }: { children: JSX.Element }) {
   let auth = useAuth();
   let location = useLocation();
-  console.log("auth.user",auth.user);
-
   if (auth.user != null) {
     // Redirect them to the /login page, but save the current location they were
     // trying to go to when they were redirected. This allows us to send them
@@ -214,7 +212,4 @@ function RequireNoAuth({ children }: { children: JSX.Element }) {
   return children;
 }
 
-function ProtectedPage() {
-  return <h3>Protected</h3>;
-}
 export default Main;

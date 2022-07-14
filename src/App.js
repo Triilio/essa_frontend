@@ -30,13 +30,10 @@ import { AuthApiProvider } from './providers/api.provider';
       </Box>
  */
 function App() {
-  const appContext = useContext(AppContext);
   return (
-    <AppContext.Provider>
       <ChakraProvider theme={theme}>
             <Main/>
       </ChakraProvider>
-  </AppContext.Provider>
   );
 }
 
